@@ -19,10 +19,10 @@ import com.cbers.models.pojos.User;
 import com.cbers.utils.Util;
 
 @WebServlet(
-		name = "PatientStatusServlet",
-		urlPatterns = {"/patientStatus"}
+		name = "PatientHistoryServlet",
+		urlPatterns = {"/patientHistory"}
 		)
-public class PatientStatusServlet extends CbersServlet {
+public class PatientHistoryServlet extends CbersServlet {
 
 
 	private static final long serialVersionUID = -7258182158267882519L;
@@ -44,11 +44,13 @@ public class PatientStatusServlet extends CbersServlet {
 			return;
 		}
 
-		loadPatientStatus(req, resp);
+		loadPatientHistory(req, resp);
 	}
 
 
-	private void loadPatientStatus(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void loadPatientHistory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String param = req.getParameter("id");
+
 		Map<String, List<PatientStatus>> allPatientStatus = PatientStatusModel.getAllPatientStatus();
 
 		String nextJSP = "/list-patient-status.jsp";
@@ -62,7 +64,7 @@ public class PatientStatusServlet extends CbersServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("Request > ["+req+"], Session > ["+req.getSession(false)+"]");
-		
+
 		String authString = req.getHeader("Authorization");
 		if (!isUserAuthenticated(authString)) {
 			resp.sendError(401, "Unauthorized Access");

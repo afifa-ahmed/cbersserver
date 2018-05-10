@@ -1,6 +1,8 @@
-package com.cbers.models;
+package com.cbers.models.pojos;
 
 import java.util.Date;
+
+import com.cbers.models.enums.Role;
 
 public class User {
 

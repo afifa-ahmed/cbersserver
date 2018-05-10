@@ -12,9 +12,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.cbers.models.Role;
-import com.cbers.models.User;
 import com.cbers.models.UserModel;
+import com.cbers.models.enums.Role;
+import com.cbers.models.pojos.User;
 import com.cbers.utils.Util;
 
 

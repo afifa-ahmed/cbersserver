@@ -1,6 +1,9 @@
-package com.cbers.models;
+package com.cbers.models.pojos;
 
 import java.util.Date;
+
+import com.cbers.models.enums.ColorCode;
+import com.cbers.models.enums.State;
 
 public class PatientStatus {
 

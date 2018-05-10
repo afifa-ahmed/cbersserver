@@ -12,7 +12,7 @@ import com.cbers.models.enums.State;
 import com.cbers.models.pojos.PatientStatus;
 import com.cbers.utils.Util;
 
-public class PatientStatusModel {
+public class IncidentModel {
 
 	public static Map<String, List<PatientStatus>> getAllPatientStatus() {
 		String query = "select u.`id` id, u.`name` name, u.`phone` phone, u.`dob` dob, ps.`temperature` temperature, "

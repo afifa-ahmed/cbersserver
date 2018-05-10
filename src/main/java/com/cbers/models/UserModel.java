@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.cbers.db.DbUtils;
+import com.cbers.models.enums.Role;
+import com.cbers.models.pojos.User;
 import com.cbers.utils.Util;
 
 public class UserModel {
