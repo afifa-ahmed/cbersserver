@@ -14,7 +14,7 @@ import java.util.Map;
 public class DbUtils {
 
 	public static List<List<String>> runSelect(String query) throws SQLException {
-		System.out.println("QA_INV: Running Select > "+query);
+		System.out.println("DB: Running Select > "+query);
 		List<List<String>> results = new ArrayList<List<String>>();
 		try (
 				Connection conn = Database.getWriteConnection();
@@ -36,7 +36,7 @@ public class DbUtils {
 	}
 
 	public static List<Map<String, String>> getDBEntries(String query) {
-		System.out.println("QA_INV: Running Select > "+query);
+		System.out.println("DB: Running Select > "+query);
 		try (
 				Connection conn = Database.getWriteConnection();
 				Statement statement = conn.createStatement();
@@ -62,7 +62,7 @@ public class DbUtils {
 	}
 
 	public static int runUpdate(String query) throws SQLException {
-		System.out.println("QA_INV: Running Update > "+query);
+		System.out.println("DB: Running Update > "+query);
 		try (
 				Connection conn = Database.getWriteConnection();
 				Statement statement = conn.createStatement();
@@ -74,7 +74,7 @@ public class DbUtils {
 	}
 
 	public static boolean tableExists(String tableName) throws SQLException{
-		System.out.println("QA_INV: Running tableExists > "+tableName);
+		System.out.println("DB: Running tableExists > "+tableName);
 		try (
 				Connection conn = Database.getWriteConnection();
 				){
