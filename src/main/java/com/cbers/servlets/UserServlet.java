@@ -78,6 +78,10 @@ public class UserServlet extends CbersServlet {
 		}
 
 		String action = req.getParameter("action");
+		if (!"add".equalsIgnoreCase(action) && !"edit".equals(action)) {
+			resp.setStatus(400);
+			return;
+		}
 		switch (action) {
 		case "add":
 			addUserAction(req, resp);
@@ -105,7 +109,7 @@ public class UserServlet extends CbersServlet {
 		String password = req.getParameter("password");
 		long phone = Long.parseLong(req.getParameter("phone"));
 		Date dob = Util.getDateFromDbString(req.getParameter("dob"));
-		Role role = Role.valueOf(req.getParameter("role"));
+		Role role = Role.valueOf(req.getParameter("role").toUpperCase());
 
 		User user = new User(name, email, password, phone, dob, role);
 		long idUser = 0;

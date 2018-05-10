@@ -26,7 +26,7 @@ public class Database {
 	}
 
 	public static Connection getWriteConnection() throws SQLException {
-		System.out.println("QA_INV: Creating DB Connection.");
+		System.out.println("DB: Creating DB Connection.");
 		return dataSourceWriter.getConnection();
 	}
 

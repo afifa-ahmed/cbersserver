@@ -39,12 +39,11 @@ public class LoginServlet extends HttpServlet {
 			if ((user = UserModel.getUser(email)) == null) {
 				resp.setStatus(401);
 				return;
-			} else {
-				role = user.getRole();
-				if (!user.getPassword().equals(password) || !role.equals(Role.ADMIN)) {
-					resp.setStatus(401);
-					return;
-				}
+			} 
+			role = user.getRole();
+			if (!user.getPassword().equals(password)) {
+				resp.setStatus(401);
+				return;
 			}
 
 			HttpSession session = req.getSession(true);
