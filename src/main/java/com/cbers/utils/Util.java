@@ -2,6 +2,7 @@ package com.cbers.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +25,12 @@ public class Util {
 
 	public static int getAgeFromDOB(Date dobDate) {
 		return (int) TimeUnit.MILLISECONDS.toDays(new Date().getTime() - dobDate.getTime())/365;
+	}
+
+	public static String decrypt(String str) {
+		System.out.println("Decrypting String: "+str);
+		byte[] result = Base64.getDecoder().decode(str.getBytes());
+		return (new String(result));
 	}
 
 }

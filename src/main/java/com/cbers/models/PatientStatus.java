@@ -11,13 +11,13 @@ public class PatientStatus {
 	private int temperature;
 	private int heartRate;
 	private String bloodPressure;
-	private String bloodSugar;
+	private int bloodSugar;
 	private ColorCode code;
 	private Date createdAt;
 	private State state;
-	
+
 	public PatientStatus(long id, String name, long phone, int age, int temperature, int heartRate,
-			String bloodPressure, String bloodSugar, ColorCode code, Date createdAt, State state) {
+			String bloodPressure, int bloodSugar, ColorCode code, Date createdAt, State state) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -30,6 +30,19 @@ public class PatientStatus {
 		this.code = code;
 		this.createdAt = createdAt;
 		this.state = state;
+	}
+
+	public PatientStatus(long id, String name, long phone, int temperature, int heartRate, String bloodPressure,
+			int bloodSugar, ColorCode code) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.phone = phone;
+		this.temperature = temperature;
+		this.heartRate = heartRate;
+		this.bloodPressure = bloodPressure;
+		this.bloodSugar = bloodSugar;
+		this.code = code;
 	}
 
 	public long getId() {
@@ -60,7 +73,7 @@ public class PatientStatus {
 		return bloodPressure;
 	}
 
-	public String getBloodSugar() {
+	public int getBloodSugar() {
 		return bloodSugar;
 	}
 
@@ -104,7 +117,7 @@ public class PatientStatus {
 		this.bloodPressure = bloodPressure;
 	}
 
-	public void setBloodSugar(String bloodSugar) {
+	public void setBloodSugar(int bloodSugar) {
 		this.bloodSugar = bloodSugar;
 	}
 
