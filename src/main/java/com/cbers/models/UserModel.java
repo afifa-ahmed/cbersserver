@@ -55,7 +55,7 @@ public class UserModel {
 				+ "VALUES ('"+user.getName()+"', '"+user.getEmail()+"', '"+user.getPassword()+"', "
 				+ ""+user.getPhone()+", '"+Util.getStringFromDate(user.getDob())+"', '"+user.getRole()+"');";
 		int rows = DbUtils.runUpdate(query);
-		if (rows == 1) {
+		if (rows == 1 && Role.PATIENT.equals(user.getRole())) {
 			long patientId = getUser(user.getEmail()).getId();
 			query = "INSERT INTO `patient_status` (`patient_id`, `temperature`, `heart_rate`, `blood_pressure`, `blood_sugar`, `state`) "
 					+ "VALUES ("+patientId+", 98, 72, '80-120', 140, 'GREEN');";
