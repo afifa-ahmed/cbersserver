@@ -59,6 +59,7 @@ public class UserModel {
 			long patientId = getUser(user.getEmail()).getId();
 			query = "INSERT INTO `patient_status` (`patient_id`, `temperature`, `heart_rate`, `blood_pressure`, `blood_sugar`, `state`) "
 					+ "VALUES ("+patientId+", 98, 72, '80-120', 140, 'GREEN');";
+			DbUtils.runUpdate(query);
 			return patientId;
 		}
 		return 0;
