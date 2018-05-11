@@ -9,6 +9,7 @@ import java.util.Map;
 import com.cbers.db.DbUtils;
 import com.cbers.models.enums.ColorCode;
 import com.cbers.models.enums.State;
+import com.cbers.models.pojos.PatientLog;
 import com.cbers.models.pojos.PatientStatus;
 import com.cbers.utils.Util;
 
@@ -18,7 +19,7 @@ public class PatientStatusModel {
 		String query = "select u.`id` id, u.`name` name, u.`phone` phone, u.`dob` dob, ps.`temperature` temperature, "
 				+ "ps.`heart_rate` heart_rate, ps.`blood_pressure` blood_pressure, ps.`blood_sugar` blood_sugar, ps.`state` status, "
 				+ "ps.`updated_at` created_at, ph.`state` incident_state from `users` u join `patient_status` ps on (u.id = ps.`patient_id`) "
-				+ "left join `patient_history` ph on (ps.`patient_id` = ph.`patient_id` AND ph.`state` = 'OPEN');";
+				+ "left join `incidents` ph on (ps.`patient_id` = ph.`patient_id` AND ph.`state` = 'OPEN');";
 
 		List<Map<String, String>> result = DbUtils.getDBEntries(query);
 		Map<String, List<PatientStatus>> patients = new HashMap<>();
@@ -74,6 +75,20 @@ public class PatientStatusModel {
 			e.printStackTrace();
 			return -2;
 		}
+	}
+
+	public static List<PatientLog> getPatientStatusLogs(long patient_id) {
+		String query = "select * from patient_logs where patient_id = "+patient_id+" order by id desc limit 20;";
+		List<Map<String, String>> result = DbUtils.getDBEntries(query);
+		List<PatientLog> patientStatusLogs = new ArrayList<>();
+		int i = 1;
+		for (Map<String, String> patientStatus : result) {
+			patientStatusLogs.add(new PatientLog(i++, Integer.parseInt(patientStatus.get("temperature")), 
+					Integer.parseInt(patientStatus.get("heart_rate")), patientStatus.get("blood_pressure"), 
+					Integer.parseInt(patientStatus.get("blood_sugar")), ColorCode.valueOf(patientStatus.get("state")),
+					Util.getDateFromDbString(patientStatus.get("created_at"))));
+		}
+		return patientStatusLogs;
 	}
 
 }

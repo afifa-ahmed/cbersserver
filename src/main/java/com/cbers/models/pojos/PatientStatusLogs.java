@@ -5,7 +5,7 @@ import java.util.Date;
 import com.cbers.models.enums.ColorCode;
 import com.cbers.models.enums.State;
 
-public class PatientStatus {
+public class PatientStatusLogs {
 
 	private long id;
 	private String name;
@@ -19,7 +19,7 @@ public class PatientStatus {
 	private Date createdAt;
 	private State state;
 
-	public PatientStatus(long id, String name, long phone, int age, int temperature, int heartRate,
+	public PatientStatusLogs(long id, String name, long phone, int age, int temperature, int heartRate,
 			String bloodPressure, int bloodSugar, ColorCode code, Date createdAt, State state) {
 		super();
 		this.id = id;
@@ -35,7 +35,7 @@ public class PatientStatus {
 		this.state = state;
 	}
 
-	public PatientStatus(long id, String name, long phone, int temperature, int heartRate, String bloodPressure,
+	public PatientStatusLogs(long id, String name, long phone, int temperature, int heartRate, String bloodPressure,
 			int bloodSugar, ColorCode code) {
 		super();
 		this.id = id;
@@ -50,7 +50,7 @@ public class PatientStatus {
 
 	@Override
 	public String toString() {
-		return "PatientStatus [id=" + id + ", name=" + name + ", phone=" + phone + ", age=" + age + ", temperature="
+		return "PatientStatusLogs [id=" + id + ", name=" + name + ", phone=" + phone + ", age=" + age + ", temperature="
 				+ temperature + ", heartRate=" + heartRate + ", bloodPressure=" + bloodPressure + ", bloodSugar="
 				+ bloodSugar + ", code=" + code + ", createdAt=" + createdAt + ", state=" + state + "]";
 	}

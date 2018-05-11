@@ -12,13 +12,13 @@ import com.cbers.models.enums.State;
 import com.cbers.models.pojos.PatientStatus;
 import com.cbers.utils.Util;
 
-public class PatientHistoryModel {
+public class PatientLogModel {
 
 	public static Map<String, List<PatientStatus>> getAllPatientStatus() {
 		String query = "select u.`id` id, u.`name` name, u.`phone` phone, u.`dob` dob, ps.`temperature` temperature, "
 				+ "ps.`heart_rate` heart_rate, ps.`blood_pressure` blood_pressure, ps.`blood_sugar` blood_sugar, ps.`state` status, "
 				+ "ps.`updated_at` created_at, ph.`state` incident_state from `users` u join `patient_status` ps on (u.id = ps.`patient_id`) "
-				+ "left join `patient_history` ph on (ps.`patient_id` = ph.`patient_id` AND ph.`state` = 'OPEN');";
+				+ "left join `incidents` ph on (ps.`patient_id` = ph.`patient_id` AND ph.`state` = 'OPEN');";
 
 		List<Map<String, String>> result = DbUtils.getDBEntries(query);
 		Map<String, List<PatientStatus>> patients = new HashMap<>();

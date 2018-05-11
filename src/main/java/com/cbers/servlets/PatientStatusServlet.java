@@ -14,6 +14,7 @@ import com.cbers.models.PatientStatusModel;
 import com.cbers.models.UserModel;
 import com.cbers.models.enums.ColorCode;
 import com.cbers.models.enums.Role;
+import com.cbers.models.enums.State;
 import com.cbers.models.pojos.PatientStatus;
 import com.cbers.models.pojos.User;
 import com.cbers.utils.Util;
@@ -53,7 +54,10 @@ public class PatientStatusServlet extends CbersServlet {
 
 		String nextJSP = "/list-patient-status.jsp";
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
-		req.setAttribute("patientStatusList", allPatientStatus);
+		req.setAttribute("openPatients", allPatientStatus.get(State.OPEN.toString()));
+		req.setAttribute("redPatients", allPatientStatus.get(ColorCode.RED.toString()));
+		req.setAttribute("orangePatients", allPatientStatus.get(ColorCode.ORANGE.toString()));
+		req.setAttribute("greenPatients", allPatientStatus.get(ColorCode.GREEN.toString()));
 		System.out.println("Forwarding patientStatus..."+allPatientStatus);
 		dispatcher.forward(req, resp);
 	}
@@ -62,7 +66,7 @@ public class PatientStatusServlet extends CbersServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("Request > ["+req+"], Session > ["+req.getSession(false)+"]");
-		
+
 		String authString = req.getHeader("Authorization");
 		if (!isUserAuthenticated(authString)) {
 			resp.sendError(401, "Unauthorized Access");

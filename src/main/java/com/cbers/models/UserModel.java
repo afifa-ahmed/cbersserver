@@ -56,7 +56,10 @@ public class UserModel {
 				+ ""+user.getPhone()+", '"+Util.getStringFromDate(user.getDob())+"', '"+user.getRole()+"');";
 		int rows = DbUtils.runUpdate(query);
 		if (rows == 1) {
-			return getUser(user.getEmail()).getId();
+			long patientId = getUser(user.getEmail()).getId();
+			query = "INSERT INTO `patient_status` (`patient_id`, `temperature`, `heart_rate`, `blood_pressure`, `blood_sugar`, `state`) "
+					+ "VALUES ("+patientId+", 98, 72, '80-120', 140, 'GREEN');";
+			return patientId;
 		}
 		return 0;
 	}

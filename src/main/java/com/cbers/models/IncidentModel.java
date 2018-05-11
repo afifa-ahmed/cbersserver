@@ -2,78 +2,102 @@ package com.cbers.models;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.cbers.db.DbUtils;
-import com.cbers.models.enums.ColorCode;
 import com.cbers.models.enums.State;
-import com.cbers.models.pojos.PatientStatus;
+import com.cbers.models.pojos.Incident;
+import com.cbers.models.pojos.IncidentLog;
 import com.cbers.utils.Util;
 
 public class IncidentModel {
 
-	public static Map<String, List<PatientStatus>> getAllPatientStatus() {
-		String query = "select u.`id` id, u.`name` name, u.`phone` phone, u.`dob` dob, ps.`temperature` temperature, "
-				+ "ps.`heart_rate` heart_rate, ps.`blood_pressure` blood_pressure, ps.`blood_sugar` blood_sugar, ps.`state` status, "
-				+ "ps.`updated_at` created_at, ph.`state` incident_state from `users` u join `patient_status` ps on (u.id = ps.`patient_id`) "
-				+ "left join `patient_history` ph on (ps.`patient_id` = ph.`patient_id` AND ph.`state` = 'OPEN');";
-
+	public static List<Incident> getPatientIncidents(long patientId) {
+		String query = "select * from incidents where patient_id = "+patientId+";";
 		List<Map<String, String>> result = DbUtils.getDBEntries(query);
-		Map<String, List<PatientStatus>> patients = new HashMap<>();
-		patients.put("RED", new ArrayList<>());
-		patients.put("ORANGE", new ArrayList<>());
-		patients.put("GREEN", new ArrayList<>());
-		patients.put("OPEN", new ArrayList<>());
-
-		System.out.println("\nReturning PatientStatus Result: "+result+"\n");
-
-		for (Map<String, String> patientStatus : result) {
-			int age = Util.getAgeFromDOB(Util.getDateFromDbString(patientStatus.get("dob")));
-			ColorCode code = ColorCode.valueOf(patientStatus.get("status"));
-			State state = patientStatus.get("incident_state") == null ? null : State.valueOf(patientStatus.get("incident_state"));
-
-			PatientStatus pStat = new PatientStatus(Long.parseLong(patientStatus.get("id")), patientStatus.get("name"), 
-					Long.parseLong(patientStatus.get("phone")), age, Integer.parseInt(patientStatus.get("temperature")), 
-					Integer.parseInt(patientStatus.get("heart_rate")), patientStatus.get("blood_pressure"), 
-					Integer.parseInt(patientStatus.get("blood_sugar")), code, Util.getDateFromDbString(patientStatus.get("created_at")), 
-					state);
-
-			if (State.OPEN.equals(state)) {
-				patients.get("OPEN").add(pStat);
+		List<Incident> openIncidents = new ArrayList<>();
+		List<Incident> closedIncidents = new ArrayList<>();
+		for (Map<String, String> incident : result) {
+			State state = State.valueOf(incident.get("state"));
+			Date closed_at = incident.get("closed_at") == null ? null : Util.getDateFromDbString(incident.get("closed_at"));
+			if (state.equals(State.OPEN)) {
+				openIncidents.add(new Incident(Long.parseLong(incident.get("id")), Long.parseLong(incident.get("patient_id")), incident.get("incident_detail"), 
+						incident.get("solution"), state, Util.getDateFromDbString(incident.get("created_at")), 
+						closed_at, incident.get("closing_comment")));
 			} else {
-				switch (code) {
-				case RED:
-					patients.get("RED").add(pStat);
-					break;
-				case ORANGE:
-					patients.get("ORANGE").add(pStat);
-					break;
-				case GREEN:
-					patients.get("GREEN").add(pStat);
-					break;
-				}
+				closedIncidents.add(new Incident(Long.parseLong(incident.get("id")), Long.parseLong(incident.get("patient_id")), incident.get("incident_detail"), 
+						incident.get("solution"), state, Util.getDateFromDbString(incident.get("created_at")), 
+						closed_at, incident.get("closing_comment")));
 			}
 		}
-		System.out.println("\nReturning PatientStatus: "+patients+"\n");
-		return patients;
+
+		List<Incident> finalIncidents = new ArrayList<>();
+		finalIncidents.addAll(openIncidents);
+		finalIncidents.addAll(closedIncidents);
+		return finalIncidents;
 	}
 
-	public static int addPatienStatus(PatientStatus patientStatus) {
-		String queryPH = "UPDATE `patient_status` SET `temperature` = "+patientStatus.getTemperature()+", `heart_rate` = "+patientStatus.getHeartRate()+", "
-				+ "`blood_pressure` = '"+patientStatus.getBloodPressure()+"', `blood_sugar` = "+patientStatus.getBloodSugar()+", "
-				+ "`state` = '"+patientStatus.getCode()+"', `updated_at` = NOW() WHERE `patient_id` = "+patientStatus.getId()+";";
-		String queryPL = "INSERT INTO `patient_logs` (`patient_id`, `temperature`, `heart_rate`, `blood_pressure`, `blood_sugar`, `state`) VALUES "
-				+ "( "+patientStatus.getId()+", "+patientStatus.getTemperature()+", "+patientStatus.getHeartRate()+", '"+patientStatus.getBloodPressure()+"', "
-				+ ""+patientStatus.getBloodSugar()+", '"+patientStatus.getCode()+"')";
+	public static Incident getLatestIncident(long patientId) {
+		String query = "select * from incidents where patient_id = "+patientId+" order by id desc limit 1;";
+		List<Map<String, String>> result = DbUtils.getDBEntries(query);
+		if (result.size() == 1) {
+			Map<String, String> incident = result.get(0);
+			Date closed_at = incident.get("closed_at") == null ? null : Util.getDateFromDbString(incident.get("closed_at"));
+			return new Incident(Long.parseLong(incident.get("id")), Long.parseLong(incident.get("patient_id")), incident.get("incident_detail"), 
+					incident.get("solution"), State.valueOf(incident.get("state")), Util.getDateFromDbString(incident.get("created_at")), 
+					closed_at, incident.get("closing_comment"));
+		} else 
+			return null;
+	}
 
-		try {
-			return DbUtils.runUpdate(queryPH) + DbUtils.runUpdate(queryPL);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return -2;
+	public static long addIncident(Incident incident) throws SQLException {
+		String query = "INSERT INTO `incidents` (`patient_id`, `incident_detail`, `solution`) VALUES "
+				+ "("+incident.getPatient_id()+", '"+incident.getIncident_detail()+"', '"+incident.getSolution()+"');";
+		int rows = DbUtils.runUpdate(query);
+
+
+		if (rows == 1 ) {
+			Incident insertedIncident = getLatestIncident(incident.getPatient_id());
+			query = "INSERT INTO `incident_logs` (`incident_id`, `incident_detail`, `solution`) VALUES ("+insertedIncident.getId()+", "
+					+ "'"+insertedIncident.getIncident_detail()+"', '"+insertedIncident.getSolution()+"');";
+			DbUtils.runUpdate(query);
+			return insertedIncident.getId();
 		}
+
+		return 0;
+	}
+
+	public static boolean updateIncident(long incident_id, String incident_detail, String solution) throws SQLException {
+		String query = "UPDATE `incidents` SET `incident_detail` = '"+incident_detail+"',"
+				+ " `solution` = '"+solution+"' WHERE `id` = "+incident_id+";";
+		int rows = DbUtils.runUpdate(query);
+
+		query = "INSERT INTO `incident_logs` (`incident_id`, `incident_detail`, `solution`) VALUES ("+incident_id+", "
+				+ "'"+incident_detail+"', '"+solution+"');";
+		DbUtils.runUpdate(query);
+		return rows == 1;
+	}
+
+	public static boolean closeIncident(long incident_id, String closing_comment) throws SQLException {
+		String query = "UPDATE `incidents` SET `state` = '"+State.CLOSED+"',"
+				+ " `closing_comment` = '"+closing_comment+"', closed_at = NOW() WHERE `id` = "+incident_id+";";
+		int rows = DbUtils.runUpdate(query);
+
+		return rows == 1;
+	}
+
+	public static List<IncidentLog> getAllIncidents(long incident_id) {
+		String query = "select * from incident_logs where incident_id = "+incident_id+" order by id desc;";
+		List<Map<String, String>> result = DbUtils.getDBEntries(query);
+		List<IncidentLog> incidentLogs = new ArrayList<>();
+		int i = 1;
+		for (Map<String, String> incident : result) {
+			incidentLogs.add(new IncidentLog(i++, incident.get("incident_detail"), incident.get("solution"), 
+					Util.getDateFromDbString(incident.get("created_at"))));
+		}
+		return incidentLogs;
 	}
 
 }

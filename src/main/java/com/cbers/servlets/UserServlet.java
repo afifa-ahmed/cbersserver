@@ -16,6 +16,7 @@ import com.cbers.models.UserModel;
 import com.cbers.models.enums.Role;
 import com.cbers.models.pojos.User;
 import com.cbers.utils.Util;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 
 
@@ -113,16 +114,19 @@ public class UserServlet extends CbersServlet {
 
 		User user = new User(name, email, password, phone, dob, role);
 		long idUser = 0;
+		String message = null;
 		try {
 			idUser = UserModel.addUser(user);
+		} catch (MySQLIntegrityConstraintViolationException e) {
+			e.printStackTrace();
+			message = "This email already exists.";
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		List<User> UserList = UserModel.getAllUsers();
-		String message = null;
-		if (idUser > 0 ) {
+		if (message == null && idUser > 0 ) {
 			message = "The new User has been successfully created.";
-		} else {
+		} else if (message == null) {
 			message = "Error: User not created!!";
 		}
 		req.setAttribute("idUser", idUser);
