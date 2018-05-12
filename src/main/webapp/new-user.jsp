@@ -39,7 +39,7 @@
 							Name:</label>
 						<div class="col-sm-10">
 							<input type="text" name="name" id="name" class="form-control"
-								value="${fn:escapeXml(user.name)}" required />
+								value="${fn:escapeXml(name)}" required />
 						</div>
 					</div>
 					<div class="form-group row">
@@ -47,7 +47,7 @@
 							Email Id:</label>
 						<div class="col-sm-10">
 							<input type="text" name="email" id="email" class="form-control"
-								value="${fn:escapeXml(user.email)}" required />
+								value="${fn:escapeXml(email)}" required />
 						</div>
 					</div>
 					<div class="form-group row">
@@ -55,8 +55,7 @@
 							Password:</label>
 						<div class="col-sm-10">
 							<input type="text" name="password" id="password"
-								class="form-control" value="${fn:escapeXml(user.password)}"
-								required />
+								class="form-control" value="${fn:escapeXml(password)}" required />
 						</div>
 					</div>
 					<div class="form-group row">
@@ -64,7 +63,7 @@
 							Mobile Number:</label>
 						<div class="col-sm-10">
 							<input type="text" name="phone" id="phone" class="form-control"
-								value="${fn:escapeXml(user.phone)}" required />
+								value="${fn:escapeXml(phone)}" required />
 						</div>
 					</div>
 					<div class="form-group row">
@@ -85,7 +84,7 @@
 						<div class="col-sm-10">
 							<div class="input-group" id="dateDiv">
 								<input type="text" class="form-control" id="dob" name="dob"
-									value="" placeholder="Select the DOB">
+									value="${fn:escapeXml(dob)}" placeholder="Select the DOB">
 								<div class="input-group-append">
 									<button class="btn btn-outline-secondary" disabled>
 										<span class="fa fa-calendar"></span>
@@ -114,7 +113,8 @@
 				<form action="user" method="post" role="form"
 					data-toggle="validator">
 					<input type="hidden" id="action" name="action" value="edit">
-					<input type="hidden" id="id" name="id" value="${fn:escapeXml(user.id)}">
+					<input type="hidden" id="id" name="id"
+						value="${fn:escapeXml(user.id)}">
 					<h2>Update User</h2>
 
 					<div class="form-group row">
@@ -122,7 +122,7 @@
 							Name:</label>
 						<div class="col-sm-10">
 							<input type="text" name="name" id="name" class="form-control"
-								value="${fn:escapeXml(user.name)}" required  readonly/>
+								value="${fn:escapeXml(user.name)}" required readonly />
 						</div>
 					</div>
 					<div class="form-group row">
@@ -130,15 +130,15 @@
 							Email Id:</label>
 						<div class="col-sm-10">
 							<input type="text" name="email" id="email" class="form-control"
-								value="${fn:escapeXml(user.email)}" required readonly/>
+								value="${fn:escapeXml(user.email)}" required readonly />
 						</div>
 					</div>
 					<div class="form-group row">
 						<label for="role" class="col-sm-2 col-form-label">User
 							Role:</label>
 						<div class="col-sm-10">
-						<input type="text" name="role" id="role" class="form-control"
-								value="${fn:escapeXml(user.role)}" required readonly/>
+							<input type="text" name="role" id="role" class="form-control"
+								value="${fn:escapeXml(user.role)}" required readonly />
 						</div>
 					</div>
 					<div class="form-group row">
@@ -252,6 +252,15 @@
 			<div id="errorDiv" class="alert alert-danger" role="alert"
 				style="display: none;"></div>
 		</div>
+		<c:if test="${not empty exisitingEmailError}">
+			<div id="exisitinEmailError" class="alert alert-danger" role="alert">${exisitingEmailError}</div>
+			<script>
+				window.onload = function() {
+					console.log('Value Role --> ' + "${role}" + ' <--');
+					$('#role').val("${role}").change();
+				}
+			</script>
+		</c:if>
 	</div>
 </body>
 </html>

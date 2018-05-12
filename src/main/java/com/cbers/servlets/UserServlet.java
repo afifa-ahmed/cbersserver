@@ -136,19 +136,27 @@ public class UserServlet extends CbersServlet {
 
 		User user = new User(name, email, password, phone, dob, role);
 		long idUser = 0;
-		String message = null;
 		try {
 			idUser = UserModel.addUser(user);
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			e.printStackTrace();
-			message = "Error: This email already exists.";
+			req.setAttribute("name", name);
+			req.setAttribute("email", email);
+			req.setAttribute("password", password);
+			req.setAttribute("phone", req.getParameter("phone"));
+			req.setAttribute("dob", req.getParameter("dob"));
+			req.setAttribute("exisitingEmailError", "Email already exists");
+			req.setAttribute("role", req.getParameter("role").toUpperCase());
+			getServletContext().getRequestDispatcher("/new-user.jsp").forward(req, resp);
+			return;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		String message = null;
 		List<User> UserList = UserModel.getAllUsers();
-		if (message == null && idUser > 0 ) {
+		if (idUser > 0 ) {
 			message = "The new User has been successfully created.";
-		} else if (message == null) {
+		} else {
 			message = "Error: User not created!!";
 		}
 		req.setAttribute("idUser", idUser);
