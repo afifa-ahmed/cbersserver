@@ -53,7 +53,13 @@ public class IncidentModel {
 	}
 
 	public static long addIncident(Incident incident) throws SQLException {
-		String query = "INSERT INTO `incidents` (`patient_id`, `incident_detail`, `solution`) VALUES "
+		String query = "select id from  `incidents`  where `patient_id` = "+incident.getPatient_id()+" and state = 'OPEN';";
+		List<Map<String, String>> result = DbUtils.getDBEntries(query);
+		if (result.size() > 0) {
+			return -2;
+		}
+
+		query = "INSERT INTO `incidents` (`patient_id`, `incident_detail`, `solution`) VALUES "
 				+ "("+incident.getPatient_id()+", '"+incident.getIncident_detail()+"', '"+incident.getSolution()+"');";
 		int rows = DbUtils.runUpdate(query);
 

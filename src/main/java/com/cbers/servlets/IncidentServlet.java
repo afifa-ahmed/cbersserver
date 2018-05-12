@@ -113,16 +113,17 @@ public class IncidentServlet extends CbersServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		List<Incident> incidentList = IncidentModel.getPatientIncidents(patient_id);
+		//		List<Incident> incidentList = IncidentModel.getPatientIncidents(patient_id);
 		String message = null;
 		if (incidentId > 0 ) {
-			message = "The new incident has been successfully created.";
+			message = "The new advice has been successfully created.";
+		} else if (incidentId == -2 ) {
+			message = "Error: An open advice already exists, please close it before adding new.";
 		} else {
 			message = "Error: Incident not created!!";
 		}
-		req.setAttribute("idIncident", incidentId);
-		req.setAttribute("message", message);
-		loadIncidents(req, resp, incidentList);
+		req.getSession().setAttribute("incidentCreateError", message);
+		resp.sendRedirect(resp.encodeRedirectURL("/cbers/patientStatus"));
 
 		// TODO HOW TO UPDATE ANDROID APP
 	}

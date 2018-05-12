@@ -49,14 +49,14 @@ public class PatientStatusServlet extends CbersServlet {
 	}
 
 
-	private void loadPatientStatus(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	void loadPatientStatus(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Map<String, List<PatientStatus>> allPatientStatus = PatientStatusModel.getAllPatientStatus();
 
 		List<PatientStatus> allPatient = new ArrayList<>();
 		allPatient.addAll( allPatientStatus.get(ColorCode.RED.toString()));
 		allPatient.addAll( allPatientStatus.get(ColorCode.ORANGE.toString()));
 		allPatient.addAll( allPatientStatus.get(ColorCode.GREEN.toString()));
-		
+
 		String nextJSP = "/list-patient-status.jsp";
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
 		req.setAttribute("redPatients", allPatientStatus.get(ColorCode.RED.toString()));

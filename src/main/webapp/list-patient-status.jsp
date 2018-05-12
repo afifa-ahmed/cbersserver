@@ -33,15 +33,16 @@
 		<br>
 
 		<!--Incident Message-->
-		<c:if test="${not empty message}">
+		<c:if test="${sessionScope.incidentCreateError != null}">
 			<c:choose>
-				<c:when test="${fn:contains(message, 'Error')}">
-					<div class="alert alert-danger">${message}</div>
+				<c:when test="${fn:contains(incidentCreateError, 'Error')}">
+					<div class="alert alert-danger">${incidentCreateError}</div>
 				</c:when>
 				<c:otherwise>
-					<div class="alert alert-success">${message}</div>
+					<div class="alert alert-success">${incidentCreateError}</div>
 				</c:otherwise>
 			</c:choose>
+			<c:remove var="incidentCreateError" />
 		</c:if>
 
 		<!--allPatients Status List-->
@@ -52,7 +53,7 @@
 			</c:when>
 			<c:otherwise>
 				<table class="table table-striped  text-center">
-					<thead>
+					<thead class="thead-dark">
 						<tr>
 							<th>Id</th>
 							<th>Name</th>
@@ -82,8 +83,8 @@
 										<td><c:out value="${patient.createdAt}" /></td>
 										<td><c:choose>
 												<c:when test="${empty patient.state}">
-													<a onclick="openCreateIncident();" href=#> <span
-														class="fa fa-plus"></span> Create
+													<a onclick="openCreateIncident('${patient.id}');" href=#>
+														<span class="fa fa-plus"></span> Create
 													</a>
 												</c:when>
 												<c:otherwise>
@@ -117,8 +118,8 @@
 										<td><c:out value="${patient.createdAt}" /></td>
 										<td><c:choose>
 												<c:when test="${empty patient.state}">
-													<a onclick="openCreateIncident();" href=#> <span
-														class="fa fa-plus"></span> Create
+													<a onclick="openCreateIncident('${patient.id}');" href=#>
+														<span class="fa fa-plus"></span> Create
 													</a>
 												</c:when>
 												<c:otherwise>
@@ -152,8 +153,8 @@
 										<td><c:out value="${patient.createdAt}" /></td>
 										<td><c:choose>
 												<c:when test="${empty patient.state}">
-													<a onclick="openCreateIncident();" href=#> <span
-														class="fa fa-plus"></span> Create
+													<a onclick="openCreateIncident('${patient.id}');" href=#>
+														<span class="fa fa-plus"></span> Create
 													</a>
 												</c:when>
 												<c:otherwise>
@@ -179,12 +180,66 @@
 
 	</div>
 	<script>
-		function openCreateIncident() {
-			var form = $('<form action="create-incident.jsp"> </form>');
+		function openCreateIncident(id) {
+			/* var form = $('<form action="create-incident.jsp"> </form>');
 			$('body').append(form);
-			form.submit();
+			form.submit(); */
+			console.log('Id: ' + id);
+
+			var inputs = $('<input type="hidden" name="patient_id" value="'+id+'">');
+			$('#createIncidentForm').append(inputs);
+			jQuery('#exampleModal').modal('show');
 		}
 	</script>
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Advice</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form action="/cbers/incident" method="post" role="form"
+						id="createIncidentForm" data-toggle="validator">
+						<input type="hidden" id="action" name="action" value="create">
+						<div class="form-group row">
+							<label for="incident" class="col-sm-2 col-form-label">
+								Incident:</label>
+							<div class="col-sm-10">
+								<input type="text" name="incident" id="incident"
+									class="form-control" required />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="solution" class="col-sm-2 col-form-label">
+								Solution:</label>
+							<div class="col-sm-10">
+								<input type="text" name="solution" id="solution"
+									class="form-control" required />
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<a href="#" id="submitModal" class="btn btn-success success">Submit</a>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			jQuery('#submitModal').on('click', function(e) {
+				e.preventDefault();
+				/* when the submit button in the modal is clicked, submit the form */
+				jQuery('#createIncidentForm').submit();
+			});
+		</script>
+	</div>
 
 
 </body>
