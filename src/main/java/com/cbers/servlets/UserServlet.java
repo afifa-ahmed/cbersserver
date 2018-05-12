@@ -51,15 +51,37 @@ public class UserServlet extends CbersServlet {
 	}
 
 	private void loadUsers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String param = req.getParameter("role");
-		List<User> result = new ArrayList<>();
-		if (param != null) {
-			result = UserModel.getUsersByRole(Role.valueOf(param));        
+		String email = req.getParameter("email");
+		if (email == null) {
+			String role = req.getParameter("role");
+			List<User> result = new ArrayList<>();
+			if (role == null || "all".equalsIgnoreCase(role)) {
+				result = UserModel.getAllUsers();
+
+			} else {
+				result = UserModel.getUsersByRole(Role.valueOf(role));
+			}
+			System.out.println("Loading Users...");
+			forwardListUsers(req, resp, result);
 		} else {
-			result = UserModel.getAllUsers();
+			loadUserEdit(req, resp, email);
 		}
-		System.out.println("Loading Users...");
-		forwardListUsers(req, resp, result);
+	}
+
+	private void loadUserEdit(HttpServletRequest req, HttpServletResponse resp, String email)
+			throws ServletException, IOException {
+		User user = null;
+		try {
+			user = UserModel.getUser(email);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		req.setAttribute("user", user);
+		req.setAttribute("action", "edit");
+		String nextJSP = "/new-user.jsp";
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+		dispatcher.forward(req, resp);
+
 	}
 
 	@Override
@@ -119,7 +141,7 @@ public class UserServlet extends CbersServlet {
 			idUser = UserModel.addUser(user);
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			e.printStackTrace();
-			message = "This email already exists.";
+			message = "Error: This email already exists.";
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

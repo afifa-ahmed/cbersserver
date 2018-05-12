@@ -55,14 +55,14 @@ public class UserModel {
 				+ "VALUES ('"+user.getName()+"', '"+user.getEmail()+"', '"+user.getPassword()+"', "
 				+ ""+user.getPhone()+", '"+Util.getStringFromDate(user.getDob())+"', '"+user.getRole()+"');";
 		int rows = DbUtils.runUpdate(query);
+		long userId = getUser(user.getEmail()).getId();
 		if (rows == 1 && Role.PATIENT.equals(user.getRole())) {
-			long patientId = getUser(user.getEmail()).getId();
 			query = "INSERT INTO `patient_status` (`patient_id`, `temperature`, `heart_rate`, `blood_pressure`, `blood_sugar`, `state`) "
-					+ "VALUES ("+patientId+", 98, 72, '80-120', 140, 'GREEN');";
+					+ "VALUES ("+userId+", 98, 72, '80-120', 140, 'GREEN');";
 			DbUtils.runUpdate(query);
-			return patientId;
 		}
-		return 0;
+		System.out.println("User Added: "+userId);
+		return userId;
 	}
 
 	public static boolean editUser(long id, String password, long phone, Date dob) throws SQLException {

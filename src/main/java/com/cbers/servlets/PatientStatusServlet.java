@@ -1,6 +1,7 @@
 package com.cbers.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,12 +53,19 @@ public class PatientStatusServlet extends CbersServlet {
 	private void loadPatientStatus(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Map<String, List<PatientStatus>> allPatientStatus = PatientStatusModel.getAllPatientStatus();
 
+		List<PatientStatus> allPatient = new ArrayList<>();
+		allPatient.addAll(allPatientStatus.get(State.OPEN.toString()));
+		allPatient.addAll( allPatientStatus.get(ColorCode.RED.toString()));
+		allPatient.addAll( allPatientStatus.get(ColorCode.ORANGE.toString()));
+		allPatient.addAll( allPatientStatus.get(ColorCode.GREEN.toString()));
+		
 		String nextJSP = "/list-patient-status.jsp";
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
 		req.setAttribute("openPatients", allPatientStatus.get(State.OPEN.toString()));
 		req.setAttribute("redPatients", allPatientStatus.get(ColorCode.RED.toString()));
 		req.setAttribute("orangePatients", allPatientStatus.get(ColorCode.ORANGE.toString()));
 		req.setAttribute("greenPatients", allPatientStatus.get(ColorCode.GREEN.toString()));
+		req.setAttribute("allPatient", allPatient);
 		System.out.println("Forwarding patientStatus..."+allPatientStatus);
 		dispatcher.forward(req, resp);
 	}
