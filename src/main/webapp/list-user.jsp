@@ -71,7 +71,7 @@
 					<table class="table table-striped  text-center">
 						<thead>
 							<tr>
-								<th>#</th>
+								<th>Id</th>
 								<th>Name</th>
 								<th>Email</th>
 								<th>Phone</th>

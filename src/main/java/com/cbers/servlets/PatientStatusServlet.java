@@ -15,7 +15,6 @@ import com.cbers.models.PatientStatusModel;
 import com.cbers.models.UserModel;
 import com.cbers.models.enums.ColorCode;
 import com.cbers.models.enums.Role;
-import com.cbers.models.enums.State;
 import com.cbers.models.pojos.PatientStatus;
 import com.cbers.models.pojos.User;
 import com.cbers.utils.Util;
@@ -54,18 +53,16 @@ public class PatientStatusServlet extends CbersServlet {
 		Map<String, List<PatientStatus>> allPatientStatus = PatientStatusModel.getAllPatientStatus();
 
 		List<PatientStatus> allPatient = new ArrayList<>();
-		allPatient.addAll(allPatientStatus.get(State.OPEN.toString()));
 		allPatient.addAll( allPatientStatus.get(ColorCode.RED.toString()));
 		allPatient.addAll( allPatientStatus.get(ColorCode.ORANGE.toString()));
 		allPatient.addAll( allPatientStatus.get(ColorCode.GREEN.toString()));
 		
 		String nextJSP = "/list-patient-status.jsp";
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
-		req.setAttribute("openPatients", allPatientStatus.get(State.OPEN.toString()));
 		req.setAttribute("redPatients", allPatientStatus.get(ColorCode.RED.toString()));
 		req.setAttribute("orangePatients", allPatientStatus.get(ColorCode.ORANGE.toString()));
 		req.setAttribute("greenPatients", allPatientStatus.get(ColorCode.GREEN.toString()));
-		req.setAttribute("allPatient", allPatient);
+		req.setAttribute("allPatients", allPatient);
 		System.out.println("Forwarding patientStatus..."+allPatientStatus);
 		dispatcher.forward(req, resp);
 	}

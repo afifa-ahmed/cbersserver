@@ -26,7 +26,6 @@ public class PatientStatusModel {
 		patients.put("RED", new ArrayList<>());
 		patients.put("ORANGE", new ArrayList<>());
 		patients.put("GREEN", new ArrayList<>());
-		patients.put("OPEN", new ArrayList<>());
 
 		System.out.println("\nReturning PatientStatus Result: "+result+"\n");
 
@@ -41,20 +40,16 @@ public class PatientStatusModel {
 					Integer.parseInt(patientStatus.get("blood_sugar")), code, Util.getDateFromDbString(patientStatus.get("created_at")), 
 					state);
 
-			if (State.OPEN.equals(state)) {
-				patients.get("OPEN").add(pStat);
-			} else {
-				switch (code) {
-				case RED:
-					patients.get("RED").add(pStat);
-					break;
-				case ORANGE:
-					patients.get("ORANGE").add(pStat);
-					break;
-				case GREEN:
-					patients.get("GREEN").add(pStat);
-					break;
-				}
+			switch (code) {
+			case RED:
+				patients.get("RED").add(pStat);
+				break;
+			case ORANGE:
+				patients.get("ORANGE").add(pStat);
+				break;
+			case GREEN:
+				patients.get("GREEN").add(pStat);
+				break;
 			}
 		}
 		System.out.println("\nReturning PatientStatus: "+patients+"\n");
