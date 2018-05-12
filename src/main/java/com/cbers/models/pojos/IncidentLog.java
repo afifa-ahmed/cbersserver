@@ -5,13 +5,15 @@ import java.util.Date;
 public class IncidentLog {
 
 	private int id;
+	private long incident_id;
 	private String incident_detail;
 	private String solution;
 	private Date created_at;
 
-	public IncidentLog(int id, String incident_detail, String solution, Date created_at) {
+	public IncidentLog(int id, long incident_id, String incident_detail, String solution, Date created_at) {
 		super();
 		this.id = id;
+		this.setIncident_id(incident_id);
 		this.incident_detail = incident_detail;
 		this.solution = solution;
 		this.created_at = created_at;
@@ -53,6 +55,14 @@ public class IncidentLog {
 
 	public void setCreated_at(Date created_at) {
 		this.created_at = created_at;
+	}
+
+	public long getIncident_id() {
+		return incident_id;
+	}
+
+	public void setIncident_id(long incident_id) {
+		this.incident_id = incident_id;
 	}
 
 }

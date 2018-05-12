@@ -39,6 +39,31 @@ public class IncidentModel {
 		return finalIncidents;
 	}
 
+	public static List<Incident> getPatientHistoryFromIncidents(long incident_id) {
+		String query = "select * from `incidents` where `patient_id` = (select `patient_id` from `incidents` where id = "+incident_id+");";
+		List<Map<String, String>> result = DbUtils.getDBEntries(query);
+		List<Incident> openIncidents = new ArrayList<>();
+		List<Incident> closedIncidents = new ArrayList<>();
+		for (Map<String, String> incident : result) {
+			State state = State.valueOf(incident.get("state"));
+			Date closed_at = incident.get("closed_at") == null ? null : Util.getDateFromDbString(incident.get("closed_at"));
+			if (state.equals(State.OPEN)) {
+				openIncidents.add(new Incident(Long.parseLong(incident.get("id")), Long.parseLong(incident.get("patient_id")), incident.get("incident_detail"), 
+						incident.get("solution"), state, Util.getDateFromDbString(incident.get("created_at")), 
+						closed_at, incident.get("closing_comment")));
+			} else {
+				closedIncidents.add(new Incident(Long.parseLong(incident.get("id")), Long.parseLong(incident.get("patient_id")), incident.get("incident_detail"), 
+						incident.get("solution"), state, Util.getDateFromDbString(incident.get("created_at")), 
+						closed_at, incident.get("closing_comment")));
+			}
+		}
+
+		List<Incident> finalIncidents = new ArrayList<>();
+		finalIncidents.addAll(openIncidents);
+		finalIncidents.addAll(closedIncidents);
+		return finalIncidents;
+	}
+
 	public static Incident getLatestIncident(long patientId) {
 		String query = "select * from incidents where patient_id = "+patientId+" order by id desc limit 1;";
 		List<Map<String, String>> result = DbUtils.getDBEntries(query);
@@ -94,14 +119,27 @@ public class IncidentModel {
 		return rows == 1;
 	}
 
+	public static List<IncidentLog> getAllOpenIncidents(long patient_id) {
+		String query = "select il.* from incident_logs il join incidents i on (il.incident_id = i.id) "
+				+ "where i.patient_id = "+patient_id+" and state='OPEN' order by id desc;";
+		List<Map<String, String>> result = DbUtils.getDBEntries(query);
+		List<IncidentLog> incidentLogs = new ArrayList<>();
+		int i = 1;
+		for (Map<String, String> incident : result) {
+			incidentLogs.add(new IncidentLog(i++, Long.parseLong(incident.get("incident_id")), incident.get("incident_detail"), 
+					incident.get("solution"), Util.getDateFromDbString(incident.get("created_at"))));
+		}
+		return incidentLogs;
+	}
+
 	public static List<IncidentLog> getAllIncidents(long incident_id) {
 		String query = "select * from incident_logs where incident_id = "+incident_id+" order by id desc;";
 		List<Map<String, String>> result = DbUtils.getDBEntries(query);
 		List<IncidentLog> incidentLogs = new ArrayList<>();
 		int i = 1;
 		for (Map<String, String> incident : result) {
-			incidentLogs.add(new IncidentLog(i++, incident.get("incident_detail"), incident.get("solution"), 
-					Util.getDateFromDbString(incident.get("created_at"))));
+			incidentLogs.add(new IncidentLog(i++, Long.parseLong(incident.get("incident_id")), incident.get("incident_detail"), 
+					incident.get("solution"), Util.getDateFromDbString(incident.get("created_at"))));
 		}
 		return incidentLogs;
 	}

@@ -1,6 +1,7 @@
 package com.cbers.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -38,17 +39,34 @@ public class IncidentLogServlet extends CbersServlet {
 			unAuthorizedAccess(req, resp);
 			return;
 		}
+		String patient_id = req.getParameter("patient_id");
+		String incident_id = req.getParameter("incident_id");
 
 		long param = 0;
-		try {
-			param = Long.parseLong(req.getParameter("incident_id"));
-		} catch (NumberFormatException | NullPointerException e) {
-			e.printStackTrace();
+		List<IncidentLog> patientIncidents = new ArrayList<>();
+		if (patient_id == null && incident_id == null) {
 			resp.sendError(400, "Invalid Request");
 			return;
+		} else if (patient_id != null) {
+			try {
+				param = Long.parseLong(req.getParameter("patient_id"));
+				patientIncidents = IncidentModel.getAllOpenIncidents(param);
+			} catch (NumberFormatException | NullPointerException e) {
+				e.printStackTrace();
+				resp.sendError(400, "Invalid Request");
+				return;
+			}
+		} else {
+			try {
+				param = Long.parseLong(req.getParameter("incident_id"));
+				patientIncidents = IncidentModel.getAllIncidents(param);
+			} catch (NumberFormatException | NullPointerException e) {
+				e.printStackTrace();
+				resp.sendError(400, "Invalid Request");
+				return;
+			}
 		}
 
-		List<IncidentLog> patientIncidents = IncidentModel.getAllIncidents(param);
 		loadIncidentLogs(req, resp, patientIncidents);
 	}
 

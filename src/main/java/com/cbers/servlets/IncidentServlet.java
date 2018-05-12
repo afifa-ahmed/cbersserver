@@ -2,6 +2,7 @@ package com.cbers.servlets;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -40,16 +41,34 @@ public class IncidentServlet extends CbersServlet {
 			return;
 		}
 
+		String patient_id = req.getParameter("patient_id");
+		String incident_id = req.getParameter("incident_id");
+
 		long param = 0;
-		try {
-			param = Long.parseLong(req.getParameter("patient_id"));
-		} catch (NumberFormatException | NullPointerException e) {
-			e.printStackTrace();
+		List<Incident> patientIncidents = new ArrayList<>();
+		if (patient_id == null && incident_id == null) {
 			resp.sendError(400, "Invalid Request");
 			return;
+		} else if (patient_id != null) {
+			try {
+				param = Long.parseLong(req.getParameter("patient_id"));
+				patientIncidents = IncidentModel.getPatientIncidents(param);
+			} catch (NumberFormatException | NullPointerException e) {
+				e.printStackTrace();
+				resp.sendError(400, "Invalid Request");
+				return;
+			}
+		} else {
+			try {
+				param = Long.parseLong(req.getParameter("incident_id"));
+				patientIncidents = IncidentModel.getPatientHistoryFromIncidents(param);
+			} catch (NumberFormatException | NullPointerException e) {
+				e.printStackTrace();
+				resp.sendError(400, "Invalid Request");
+				return;
+			}
 		}
 
-		List<Incident> patientIncidents = IncidentModel.getPatientIncidents(param);
 		loadIncidents(req, resp, patientIncidents);
 	}
 
@@ -131,7 +150,6 @@ public class IncidentServlet extends CbersServlet {
 	private void updateIncident(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		long incident_id = Long.parseLong(req.getParameter("incident_id"));
-		long patient_id = Long.parseLong(req.getParameter("patient_id"));
 		String incident_detail = req.getParameter("incident");
 		String solution = req.getParameter("solution");
 
@@ -147,10 +165,8 @@ public class IncidentServlet extends CbersServlet {
 		} else {
 			message = "Error: Incident not updated!!";
 		}
-		List<Incident> incidentList = IncidentModel.getPatientIncidents(patient_id);;
-		req.setAttribute("idIncident", incident_id);
-		req.setAttribute("message", message);
-		loadIncidents(req, resp, incidentList);
+		req.getSession().setAttribute("incidentUpdateError", message);
+		resp.sendRedirect(resp.encodeRedirectURL("/cbers/incidentLog?incident_id="+incident_id));
 
 		// TODO HOW TO UPDATE ANDROID APP
 	}
@@ -158,7 +174,6 @@ public class IncidentServlet extends CbersServlet {
 	private void closeIncident(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		long incident_id = Long.parseLong(req.getParameter("incident_id"));
-		long patient_id = Long.parseLong(req.getParameter("patient_id"));
 		String closing_comment = req.getParameter("closing_comment");
 
 		boolean success = false;
@@ -169,15 +184,12 @@ public class IncidentServlet extends CbersServlet {
 		}
 		String message = null;
 		if (success) {
-			message = "The Incident has been successfully closed.";
+			message = "The Incident has been successfully closed. <a href=\"/cbers/patientStatus\" class=\"alert-link\">Go Back</a>";
 		} else {
 			message = "Error: Incident not closed!!";
 		}
-		List<Incident> incidentList = IncidentModel.getPatientIncidents(patient_id);;
-		req.setAttribute("idIncident", incident_id);
-		req.setAttribute("message", message);
-		loadIncidents(req, resp, incidentList);
-
+		req.getSession().setAttribute("incidentCloseError", message);
+		resp.sendRedirect(resp.encodeRedirectURL("/cbers/incidentLog?incident_id="+incident_id));
 		// TODO HOW TO UPDATE ANDROID APP
 	}
 

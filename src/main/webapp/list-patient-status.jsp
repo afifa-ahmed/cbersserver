@@ -74,7 +74,9 @@
 								<c:forEach var="patient" items="${redPatients}">
 									<tr>
 										<td><c:out value="${patient.id}" /></td>
-										<td><c:out value="${patient.name}" /></td>
+										<td><a
+											href="/cbers/patientStatusLog?patient_id=${patient.id}"
+											title="View Patient Logs">${patient.name}</a></td>
 										<td><c:out value="${patient.age}" /></td>
 										<td><c:out value="${patient.temperature}" /></td>
 										<td><c:out value="${patient.heartRate}" /></td>
@@ -88,7 +90,7 @@
 													</a>
 												</c:when>
 												<c:otherwise>
-													<a href="/cbers/incident?patient_id=${patient.id}"
+													<a href="/cbers/incidentLog?patient_id=${patient.id}"
 														title="View Incident History"> <span
 														class="fa fa-pencil-square-o"> </span>
 													</a>
@@ -109,7 +111,9 @@
 								<c:forEach var="patient" items="${orangePatients}">
 									<tr>
 										<td><c:out value="${patient.id}" /></td>
-										<td><c:out value="${patient.name}" /></td>
+										<td><a
+											href="/cbers/patientStatusLog?patient_id=${patient.id}"
+											title="View Patient Logs">${patient.name}</a></td>
 										<td><c:out value="${patient.age}" /></td>
 										<td><c:out value="${patient.temperature}" /></td>
 										<td><c:out value="${patient.heartRate}" /></td>
@@ -123,7 +127,7 @@
 													</a>
 												</c:when>
 												<c:otherwise>
-													<a href="/cbers/incident?patient_id=${patient.id}"
+													<a href="/cbers/incidentLog?patient_id=${patient.id}"
 														title="View Incident History"> <span
 														class="fa fa-pencil-square-o"> </span>
 													</a>
@@ -144,7 +148,9 @@
 								<c:forEach var="patient" items="${greenPatients}">
 									<tr>
 										<td><c:out value="${patient.id}" /></td>
-										<td><c:out value="${patient.name}" /></td>
+										<td><a
+											href="/cbers/patientStatusLog?patient_id=${patient.id}"
+											title="View Patient Logs">${patient.name}</a></td>
 										<td><c:out value="${patient.age}" /></td>
 										<td><c:out value="${patient.temperature}" /></td>
 										<td><c:out value="${patient.heartRate}" /></td>
@@ -158,7 +164,7 @@
 													</a>
 												</c:when>
 												<c:otherwise>
-													<a href="/cbers/incident?patient_id=${patient.id}"
+													<a href="/cbers/incidentLog?patient_id=${patient.id}"
 														title="View Incident History"> <span
 														class="fa fa-pencil-square-o"> </span>
 													</a>
@@ -181,9 +187,6 @@
 	</div>
 	<script>
 		function openCreateIncident(id) {
-			/* var form = $('<form action="create-incident.jsp"> </form>');
-			$('body').append(form);
-			form.submit(); */
 			console.log('Id: ' + id);
 
 			var inputs = $('<input type="hidden" name="patient_id" value="'+id+'">');

@@ -72,18 +72,42 @@ public class PatientStatusModel {
 		}
 	}
 
-	public static List<PatientLog> getPatientStatusLogs(long patient_id) {
+	public static Map<String, List<PatientLog>> getPatientStatusLogs(long patient_id) {
 		String query = "select * from patient_logs where patient_id = "+patient_id+" order by id desc limit 20;";
 		List<Map<String, String>> result = DbUtils.getDBEntries(query);
-		List<PatientLog> patientStatusLogs = new ArrayList<>();
+
+		Map<String, List<PatientLog>> patients = new HashMap<>();
+		patients.put("RED", new ArrayList<>());
+		patients.put("ORANGE", new ArrayList<>());
+		patients.put("GREEN", new ArrayList<>());
+
+		System.out.println("\nReturning PatientStatus Result: "+result+"\n");
+
+
 		int i = 1;
 		for (Map<String, String> patientStatus : result) {
-			patientStatusLogs.add(new PatientLog(i++, Integer.parseInt(patientStatus.get("temperature")), 
+			ColorCode code = ColorCode.valueOf(patientStatus.get("state"));
+
+			PatientLog pStat = new PatientLog(i++, Integer.parseInt(patientStatus.get("temperature")), 
 					Integer.parseInt(patientStatus.get("heart_rate")), patientStatus.get("blood_pressure"), 
-					Integer.parseInt(patientStatus.get("blood_sugar")), ColorCode.valueOf(patientStatus.get("state")),
-					Util.getDateFromDbString(patientStatus.get("created_at"))));
+					Integer.parseInt(patientStatus.get("blood_sugar")), code,
+					Util.getDateFromDbString(patientStatus.get("created_at")));
+
+			switch (code) {
+			case RED:
+				patients.get("RED").add(pStat);
+				break;
+			case ORANGE:
+				patients.get("ORANGE").add(pStat);
+				break;
+			case GREEN:
+				patients.get("GREEN").add(pStat);
+				break;
+			}
 		}
-		return patientStatusLogs;
+		System.out.println("\nReturning PatientStatus: "+patients+"\n");
+
+		return patients;
 	}
 
 }
