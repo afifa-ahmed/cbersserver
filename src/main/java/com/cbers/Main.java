@@ -27,9 +27,9 @@ public class Main {
 
 		ErrorPage errorPage = new ErrorPage();
 		errorPage.setErrorCode(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		//		errorPage.setExceptionType("java.lang.Exception");
-		//		errorPage.setLocation("/error.jsp");
-		//		appContext.addErrorPage(errorPage);
+		errorPage.setExceptionType("java.lang.Exception");
+		errorPage.setLocation("/error.jsp");
+		appContext.addErrorPage(errorPage);
 
 		tomcat.start();
 

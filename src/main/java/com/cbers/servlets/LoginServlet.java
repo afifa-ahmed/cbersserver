@@ -2,6 +2,7 @@ package com.cbers.servlets;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -37,12 +38,19 @@ public class LoginServlet extends HttpServlet {
 			User user = null;
 			Role role = null;
 			if ((user = UserModel.getUser(email)) == null) {
-				resp.setStatus(401);
+				req.setAttribute("error", "User does not exist");
+				String nextJSP = "/index.jsp";
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+				dispatcher.forward(req, resp);
 				return;
 			} 
 			role = user.getRole();
 			if (!user.getPassword().equals(password)) {
-				resp.setStatus(401);
+				req.setAttribute("error", "Password is incorrect");
+				req.setAttribute("email", email);
+				String nextJSP = "/index.jsp";
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+				dispatcher.forward(req, resp);
 				return;
 			}
 
@@ -64,7 +72,11 @@ public class LoginServlet extends HttpServlet {
 				resp.setStatus(200);
 				return;
 			default:
-				resp.setStatus(401);
+				req.setAttribute("error", "You are not authorized.");
+				req.setAttribute("email", email);
+				String nextJSP = "/index.jsp";
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+				dispatcher.forward(req, resp);
 				return;
 			}
 
