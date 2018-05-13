@@ -137,6 +137,13 @@
 				<a class="btn btn-outline-warning  btn-md" href="#"
 					onclick="history.back();return false;">Go Back</a>
 			</div>
+
+			<div class="col text-right">
+				<a class="btn btn-primary  btn-md"
+					href="/cbers/incident?patient_id=${patient_id}"> <span
+					class="fa fa-eye"></span> View Patient History
+				</a>
+			</div>
 		</div>
 
 	</div>
