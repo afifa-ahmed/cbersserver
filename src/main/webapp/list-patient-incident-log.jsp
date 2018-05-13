@@ -65,19 +65,25 @@
 		<div class="row">
 			<div class="col">
 				<a class="btn btn-outline-warning  btn-md"
-					href="/cbers/incident?incident_id=${pageScope.incident_id}">View
-					Patient History</a>
+					href="/cbers/patientStatus"><span
+					class="fa fa-arrow-alt-left"></span>Go Back</a>
 			</div>
 			<div class="col">
-				<a class="btn btn-outline-warning  btn-md"
+				<a class="btn btn-primary  btn-md"
+					href="/cbers/incident?incident_id=${pageScope.incident_id}"> <span
+					class="fa fa-eye"></span> View Patient History
+				</a>
+			</div>
+			<div class="col">
+				<a class="btn btn-info  btn-md"
 					onclick="openUpdateIncident('${pageScope.incident_id}');" href=#>
 					<span class="fa fa-pencil-square-o"></span> Update Advice
 				</a>
 			</div>
-			<div class="col-md-6 text-right">
-				<a class="btn btn-outline-warning  btn-md"
+			<div class="col text-right">
+				<a class="btn btn-success  btn-md"
 					onclick="openCloseIncident('${pageScope.incident_id}');" href=#>
-					<span class="fa fa-pencil-square-o"></span> Close Incident
+					<span class="fa fa-times"></span> Close Incident
 				</a>
 			</div>
 		</div>

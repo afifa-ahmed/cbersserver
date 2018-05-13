@@ -19,6 +19,31 @@
 <title>Login</title>
 </head>
 
+<c:if test="${sessionScope.userName != null}">
+	<%
+		System.out.println("User already logged in.");
+	%>
+	<c:if test="${sessionScope.userRole != null}">
+		<c:choose>
+			<c:when test="${sessionScope.userRole == 'ADMIN'}">
+				<c:redirect url="/user" />
+			</c:when>
+			<c:otherwise>
+				<c:choose>
+					<c:when test="${sessionScope.userRole == 'DOCTOR'}">
+						<c:redirect url="/patientStatus" />
+					</c:when>
+					<c:otherwise>
+						<c:redirect url="/login" />
+					</c:otherwise>
+				</c:choose>
+
+			</c:otherwise>
+		</c:choose>
+
+	</c:if>
+</c:if>
+
 <body>
 	<div class="main">
 		<div class="container">
@@ -32,7 +57,8 @@
 
 							<p>
 								<span class="fa fa-user"></span><input id="email" name="email"
-									type="text" Placeholder="Email" value="${fn:escapeXml(email)}" required>
+									type="text" Placeholder="Email" value="${fn:escapeXml(email)}"
+									required>
 							</p>
 							<!-- JS because of IE support; better: placeholder="Username" -->
 							<p>
@@ -45,7 +71,7 @@
 								<span
 									style="width: 48%; text-align: left; display: inline-block;">
 									<c:if test="${not empty error}">
-										<div style="color: red;font-size: 12;">${error}</div>
+										<div style="color: red; font-size: 12;">${error}</div>
 									</c:if>
 
 								</span> <span

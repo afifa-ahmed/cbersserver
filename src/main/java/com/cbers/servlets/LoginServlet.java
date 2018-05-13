@@ -86,4 +86,56 @@ public class LoginServlet extends HttpServlet {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	protected void doGet (HttpServletRequest req,
+			HttpServletResponse resp)
+					throws ServletException, IOException {
+
+		resp.setContentType("text/html");
+
+		if (req.getSession(false) == null || req.getSession(false).getAttribute("userName") == null) {
+			req.setAttribute("error", "You are not logged in.");
+			String nextJSP = "/index.jsp";
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+			dispatcher.forward(req, resp);
+			return;
+		}
+
+		if (req.getSession(false).getAttribute("userRole") != null ) {
+
+			HttpSession session = req.getSession(false);
+			Role role = Role.valueOf(session.getAttribute("userRole").toString());
+			System.out.println("User Role Is: " + session.getAttribute("userRole"));
+
+			String encodedURL = "";
+
+			switch (role) {
+			case ADMIN:
+				encodedURL = resp.encodeRedirectURL("/cbers/user");
+				break;
+			case DOCTOR:
+				encodedURL = resp.encodeRedirectURL("/cbers/patientStatus");
+				break;
+			case PATIENT:
+				resp.setStatus(200);
+				return;
+			default:
+				req.setAttribute("error", "You are not authorized.");
+				String nextJSP = "/index.jsp";
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+				dispatcher.forward(req, resp);
+				return;
+			}
+
+			resp.sendRedirect(encodedURL);
+		} else {
+			req.setAttribute("error", "You are not authorized.");
+			String nextJSP = "/index.jsp";
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+			dispatcher.forward(req, resp);
+			return;
+		}
+
+	}
 }
