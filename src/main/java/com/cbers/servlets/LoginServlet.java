@@ -1,6 +1,7 @@
 package com.cbers.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,9 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.cbers.models.PatientStatusModel;
 import com.cbers.models.UserModel;
 import com.cbers.models.enums.Role;
+import com.cbers.models.pojos.CbersResponse;
+import com.cbers.models.pojos.PatientLog;
 import com.cbers.models.pojos.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @WebServlet(urlPatterns = {"/login"})
@@ -69,6 +74,20 @@ public class LoginServlet extends HttpServlet {
 				encodedURL = resp.encodeRedirectURL("/cbers/patientStatus");
 				break;
 			case PATIENT:
+				PrintWriter out = resp.getWriter();
+				ObjectMapper objectMapper= new ObjectMapper();
+				PatientLog pl = PatientStatusModel.getLatestPatientStatus(email);
+				String jsonString = "";
+				if (pl != null) {
+					jsonString = objectMapper.writeValueAsString(pl);
+				} else {
+					jsonString =  objectMapper.writeValueAsString(new CbersResponse("Failure", "No Data Found"));
+				}
+
+				resp.setContentType("application/json");
+				resp.setCharacterEncoding("UTF-8");
+				out.print(jsonString);
+				out.flush();
 				resp.setStatus(200);
 				return;
 			default:
