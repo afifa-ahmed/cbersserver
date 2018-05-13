@@ -65,8 +65,8 @@
 		<div class="row">
 			<div class="col">
 				<a class="btn btn-outline-warning  btn-md"
-					href="/cbers/patientStatus"><span
-					class="fa fa-arrow-alt-left"></span>Go Back</a>
+					href="/cbers/patientStatus"><span class="fa fa-arrow-alt-left"></span>Go
+					Back</a>
 			</div>
 			<div class="col">
 				<a class="btn btn-primary  btn-md"
@@ -74,14 +74,11 @@
 					class="fa fa-eye"></span> View Patient History
 				</a>
 			</div>
-			<div class="col">
+			<div class="col text-right">
 				<a class="btn btn-info  btn-md"
 					onclick="openUpdateIncident('${pageScope.incident_id}');" href=#>
 					<span class="fa fa-pencil-square-o"></span> Update Advice
-				</a>
-			</div>
-			<div class="col text-right">
-				<a class="btn btn-success  btn-md"
+				</a> <a class="btn btn-success  btn-md"
 					onclick="openCloseIncident('${pageScope.incident_id}');" href=#>
 					<span class="fa fa-times"></span> Close Incident
 				</a>
@@ -202,9 +199,9 @@
 							id="closeIncidentForm" data-toggle="validator">
 							<input type="hidden" id="action" name="action" value="close">
 							<div class="form-group row">
-								<label for="closing_comment" class="col-sm-2 col-form-label">
+								<label for="closing_comment" class="col-sm-3 col-form-label">
 									Observation:</label>
-								<div class="col-sm-10">
+								<div class="col-sm-8">
 									<input type="text" name="closing_comment" id="closing_comment"
 										class="form-control" required />
 								</div>
