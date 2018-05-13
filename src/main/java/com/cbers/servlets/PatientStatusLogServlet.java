@@ -1,9 +1,7 @@
 package com.cbers.servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cbers.models.PatientStatusModel;
-import com.cbers.models.enums.ColorCode;
 import com.cbers.models.enums.Role;
 import com.cbers.models.pojos.PatientLog;
 
@@ -52,24 +49,17 @@ public class PatientStatusLogServlet extends CbersServlet {
 		}
 
 		req.setAttribute("patient_id", param);
-		Map<String, List<PatientLog>> patientStatusLogs = PatientStatusModel.getPatientStatusLogs(param);
+		List<PatientLog> patientStatusLogs = PatientStatusModel.getPatientStatusLogs(param);
 		loadPatientStatusLogs(req, resp, patientStatusLogs);
 	}
 
 
-	private void loadPatientStatusLogs(HttpServletRequest req, HttpServletResponse resp, Map<String, List<PatientLog>> patientStatusLogs) 
+	private void loadPatientStatusLogs(HttpServletRequest req, HttpServletResponse resp, List<PatientLog> patientStatusLogs) 
 			throws ServletException, IOException {
-		List<PatientLog> allPatient = new ArrayList<>();
-		allPatient.addAll( patientStatusLogs.get(ColorCode.RED.toString()));
-		allPatient.addAll( patientStatusLogs.get(ColorCode.ORANGE.toString()));
-		allPatient.addAll( patientStatusLogs.get(ColorCode.GREEN.toString()));
 
 		String nextJSP = "/list-patient-status-log.jsp";
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
-		req.setAttribute("redPatients", patientStatusLogs.get(ColorCode.RED.toString()));
-		req.setAttribute("orangePatients", patientStatusLogs.get(ColorCode.ORANGE.toString()));
-		req.setAttribute("greenPatients", patientStatusLogs.get(ColorCode.GREEN.toString()));
-		req.setAttribute("allPatients", allPatient);
+		req.setAttribute("allPatients", patientStatusLogs);
 		System.out.println("Forwarding patientStatusLogs..."+patientStatusLogs);
 		dispatcher.forward(req, resp);
 	}

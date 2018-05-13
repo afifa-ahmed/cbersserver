@@ -40,7 +40,7 @@
 				<table class="table table-striped  text-center">
 					<thead>
 						<tr>
-							<th>#</th>
+							<th>Incident Id</th>
 							<th>Incident Detail</th>
 							<th>Advice given</th>
 							<th>Started On</th>

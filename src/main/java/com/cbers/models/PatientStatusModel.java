@@ -72,14 +72,11 @@ public class PatientStatusModel {
 		}
 	}
 
-	public static Map<String, List<PatientLog>> getPatientStatusLogs(long patient_id) {
+	public static List<PatientLog> getPatientStatusLogs(long patient_id) {
 		String query = "select * from patient_logs where patient_id = "+patient_id+" order by id desc limit 20;";
 		List<Map<String, String>> result = DbUtils.getDBEntries(query);
 
-		Map<String, List<PatientLog>> patients = new HashMap<>();
-		patients.put("RED", new ArrayList<>());
-		patients.put("ORANGE", new ArrayList<>());
-		patients.put("GREEN", new ArrayList<>());
+		List<PatientLog> patients = new ArrayList<>();
 
 		System.out.println("\nReturning PatientStatus Result: "+result+"\n");
 
@@ -93,17 +90,7 @@ public class PatientStatusModel {
 					Integer.parseInt(patientStatus.get("blood_sugar")), code,
 					Util.getDateFromDbString(patientStatus.get("created_at")));
 
-			switch (code) {
-			case RED:
-				patients.get("RED").add(pStat);
-				break;
-			case ORANGE:
-				patients.get("ORANGE").add(pStat);
-				break;
-			case GREEN:
-				patients.get("GREEN").add(pStat);
-				break;
-			}
+			patients.add(pStat);
 		}
 		System.out.println("\nReturning PatientStatus: "+patients+"\n");
 

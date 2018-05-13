@@ -57,7 +57,7 @@
 				<table class="table table-striped  text-center">
 					<thead class="thead-dark">
 						<tr>
-							<th>Id</th>
+							<th>#</th>
 							<th>Temperature</th>
 							<th>HeartRate</th>
 							<th>BP</th>
@@ -66,65 +66,34 @@
 						</tr>
 					</thead>
 
-					<!--redPatients List-->
-					<c:choose>
-						<c:when test="${not empty redPatients}">
-							<tbody class="table-danger">
-								<c:forEach var="patient" items="${redPatients}">
-									<tr>
-										<td><c:out value="${patient.id}" /></td>
-										<td><c:out value="${patient.temperature}" /></td>
-										<td><c:out value="${patient.heartRate}" /></td>
-										<td><c:out value="${patient.bloodPressure}" /></td>
-										<td><c:out value="${patient.bloodSugar}" /></td>
-										<td><c:out value="${patient.createdAt}" /></td>
-									</tr>
-								</c:forEach>
-							</tbody>
-						</c:when>
-						<c:otherwise>
-						</c:otherwise>
-					</c:choose>
+					<tbody>
+						<c:forEach var="patient" items="${allPatients}">
 
-					<!--orangePatients List-->
-					<c:choose>
-						<c:when test="${not empty orangePatients}">
-							<tbody class="table-warning">
-								<c:forEach var="patient" items="${orangePatients}">
-									<tr>
-										<td><c:out value="${patient.id}" /></td>
-										<td><c:out value="${patient.temperature}" /></td>
-										<td><c:out value="${patient.heartRate}" /></td>
-										<td><c:out value="${patient.bloodPressure}" /></td>
-										<td><c:out value="${patient.bloodSugar}" /></td>
-										<td><c:out value="${patient.createdAt}" /></td>
-									</tr>
-								</c:forEach>
-							</tbody>
-						</c:when>
-						<c:otherwise>
-						</c:otherwise>
-					</c:choose>
+							<c:choose>
+								<c:when test="${patient.code == 'RED'}">
+									<tr class="table-danger">
+								</c:when>
+								<c:otherwise>
+									<c:choose>
+										<c:when test="${patient.code == 'ORANGE'}">
+											<tr class="table-warning">
+										</c:when>
+										<c:otherwise>
+											<tr class="table-success">
+										</c:otherwise>
+									</c:choose>
+								</c:otherwise>
+							</c:choose>
 
-					<!--greenPatients List-->
-					<c:choose>
-						<c:when test="${not empty greenPatients}">
-							<tbody class="table-success">
-								<c:forEach var="patient" items="${greenPatients}">
-									<tr>
-										<td><c:out value="${patient.id}" /></td>
-										<td><c:out value="${patient.temperature}" /></td>
-										<td><c:out value="${patient.heartRate}" /></td>
-										<td><c:out value="${patient.bloodPressure}" /></td>
-										<td><c:out value="${patient.bloodSugar}" /></td>
-										<td><c:out value="${patient.createdAt}" /></td>
-									</tr>
-								</c:forEach>
-							</tbody>
-						</c:when>
-						<c:otherwise>
-						</c:otherwise>
-					</c:choose>
+							<td><c:out value="${patient.id}" /></td>
+							<td><c:out value="${patient.temperature}" /></td>
+							<td><c:out value="${patient.heartRate}" /></td>
+							<td><c:out value="${patient.bloodPressure}" /></td>
+							<td><c:out value="${patient.bloodSugar}" /></td>
+							<td><c:out value="${patient.createdAt}" /></td>
+							</tr>
+						</c:forEach>
+					</tbody>
 
 				</table>
 
