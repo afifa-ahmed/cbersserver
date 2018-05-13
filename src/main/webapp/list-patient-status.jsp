@@ -228,6 +228,10 @@
 							</div>
 						</div>
 					</form>
+					<div class="text-right">
+						<div id="errorDivUpdate" class="alert alert-danger" role="alert"
+							style="display: none;"></div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -236,11 +240,33 @@
 			</div>
 		</div>
 		<script type="text/javascript">
-			jQuery('#submitModal').on('click', function(e) {
-				e.preventDefault();
-				/* when the submit button in the modal is clicked, submit the form */
-				jQuery('#createIncidentForm').submit();
-			});
+			jQuery('#submitModal').on(
+					'click',
+					function(e) {
+						e.preventDefault();
+
+						console.log('Submit clicked, verifying modal');
+						var incident = jQuery('#incident').val();
+						if (!incident || '' == incident) {
+							console.log('incident: ' + incident);
+							jQuery('#errorDivUpdate').text(
+									'Please enter incident details');
+							jQuery('#errorDivUpdate').css("display", "inline");
+							return false;
+						}
+						var solution = jQuery('#solution').val();
+						if (!solution || '' == solution) {
+							console.log('solution: ' + solution);
+							jQuery('#errorDivUpdate').text(
+									'Please enter solution details');
+							jQuery('#errorDivUpdate').css("display", "inline");
+							return false;
+						}
+
+						jQuery('#errorDivUpdate').css("display", "none");
+						/* when the submit button in the modal is clicked, submit the form */
+						jQuery('#createIncidentForm').submit();
+					});
 		</script>
 	</div>
 

@@ -65,8 +65,9 @@
 		<div class="row">
 			<div class="col">
 				<a class="btn btn-outline-warning  btn-md"
-					href="/cbers/patientStatus"><span class="fa fa-arrow-alt-left"></span>Go
-					Back</a>
+					href="/cbers/patientStatus"><span
+					class="fa
+					 fa-arrow-alt-left"></span>Go Back</a>
 			</div>
 			<div class="col">
 				<a class="btn btn-primary  btn-md"
@@ -143,6 +144,10 @@
 								</div>
 							</div>
 						</form>
+						<div class="text-right">
+							<div id="errorDivUpdate" class="alert alert-danger" role="alert"
+								style="display: none;"></div>
+						</div>
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -150,12 +155,37 @@
 					</div>
 				</div>
 			</div>
+
 			<script type="text/javascript">
-				jQuery('#submitModal').on('click', function(e) {
-					e.preventDefault();
-					/* when the submit button in the modal is clicked, submit the form */
-					jQuery('#updateIncidentForm').submit();
-				});
+				jQuery('#submitModal').on(
+						'click',
+						function(e) {
+							e.preventDefault();
+
+							console.log('Submit clicked, verifying modal');
+							var incident = jQuery('#incident').val();
+							if (!incident || '' == incident) {
+								console.log('incident: ' + incident);
+								jQuery('#errorDivUpdate').text(
+										'Please enter incident details');
+								jQuery('#errorDivUpdate').css("display",
+										"inline");
+								return false;
+							}
+							var solution = jQuery('#solution').val();
+							if (!solution || '' == solution) {
+								console.log('solution: ' + solution);
+								jQuery('#errorDivUpdate').text(
+										'Please enter solution details');
+								jQuery('#errorDivUpdate').css("display",
+										"inline");
+								return false;
+							}
+
+							jQuery('#errorDivUpdate').css("display", "none");
+							/* when the submit button in the modal is clicked, submit the form */
+							jQuery('#updateIncidentForm').submit();
+						});
 			</script>
 		</div>
 
@@ -182,7 +212,7 @@
 			}
 		</script>
 
-		<!-- Modal Update -->
+		<!-- Modal Close -->
 		<div class="modal fade" id="modalClose" tabindex="-1" role="dialog"
 			aria-labelledby="closeModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -207,6 +237,10 @@
 								</div>
 							</div>
 						</form>
+						<div class="text-right">
+							<div id="errorDivClose" class="alert alert-danger" role="alert"
+								style="display: none;"></div>
+						</div>
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -215,11 +249,26 @@
 				</div>
 			</div>
 			<script type="text/javascript">
-				jQuery('#submitCloseModal').on('click', function(e) {
-					e.preventDefault();
-					/* when the submit button in the modal is clicked, submit the form */
-					jQuery('#closeIncidentForm').submit();
-				});
+				jQuery('#submitCloseModal').on(
+						'click',
+						function(e) {
+							e.preventDefault();
+
+							console.log('Submit clicked, verifying modal');
+							var closing_comment = jQuery('#closing_comment').val();
+							if (!closing_comment || '' == closing_comment) {
+								console.log('closing_comment: ' + closing_comment);
+								jQuery('#errorDivClose').text(
+										'Please enter closing comments.');
+								jQuery('#errorDivClose').css("display",
+										"inline");
+								return false;
+							}
+
+							jQuery('#errorDivClose').css("display", "none");
+							/* when the submit button in the modal is clicked, submit the form */
+							jQuery('#closeIncidentForm').submit();
+						});
 			</script>
 		</div>
 
