@@ -20,7 +20,9 @@
 
 		<div class="row align-items-center">
 			<div class="col">
-				<img class="img-fluid" src="HeartCBERS.png" />
+				<a href="/cbers/patientStatus"> <img class="img-fluid"
+					src="HeartCBERS.png" />
+				</a>
 			</div>
 			<div class="col-8">
 				<h2>Patient Status Logs</h2>

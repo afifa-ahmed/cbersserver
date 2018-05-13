@@ -20,10 +20,12 @@
 
 		<div class="row align-items-center">
 			<div class="col">
-				<img class="img-fluid" src="HeartCBERS.png" />
+				<a href="/cbers/patientStatus"> <img class="img-fluid"
+					src="HeartCBERS.png" />
+				</a>
 			</div>
 			<div class="col-8">
-				<h2>Incident History</h2>
+				<h2>Patient History</h2>
 			</div>
 			<div class="col text-right">
 				<a href="/cbers/logout">Sign out</a>
