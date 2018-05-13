@@ -11,7 +11,7 @@
 <link href="css/font-awesome.min.css" rel="stylesheet" />
 <script src="js/bootstrap.min.js"></script>
 <link rel="shortcut icon" href="favicon.ico" />
-<title>User List</title>
+<title>Status Logs</title>
 </head>
 
 <body>
@@ -25,7 +25,14 @@
 				</a>
 			</div>
 			<div class="col-8">
-				<h2>Patient Status Logs</h2>
+				<c:choose>
+					<c:when test="${not empty patient_name}">
+						<h3>${patient_name}'s Status Logs</h3>
+					</c:when>
+					<c:otherwise>
+						<h3>Patient's Status Logs</h3>
+					</c:otherwise>
+				</c:choose>
 			</div>
 			<div class="col text-right">
 				<a href="/cbers/logout">Sign out</a>

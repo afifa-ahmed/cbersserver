@@ -48,6 +48,7 @@ public class PatientStatusLogServlet extends CbersServlet {
 			return;
 		}
 
+		req.setAttribute("patient_name", req.getParameter("patient_name"));
 		req.setAttribute("patient_id", param);
 		List<PatientLog> patientStatusLogs = PatientStatusModel.getPatientStatusLogs(param);
 		loadPatientStatusLogs(req, resp, patientStatusLogs);

@@ -12,7 +12,7 @@
 <link href="css/font-awesome.min.css" rel="stylesheet" />
 <script src="js/bootstrap.min.js"></script>
 <link rel="shortcut icon" href="favicon.ico" />
-<title>User List</title>
+<title>Patients Status</title>
 </head>
 
 <body>
@@ -76,7 +76,7 @@
 									<tr>
 										<td><c:out value="${patient.id}" /></td>
 										<td><a
-											href="/cbers/patientStatusLog?patient_id=${patient.id}"
+											href="/cbers/patientStatusLog?patient_id=${patient.id}&patient_name=${patient.name}"
 											title="View Patient Logs">${patient.name}</a></td>
 										<td><c:out value="${patient.age}" /></td>
 										<td><c:out value="${patient.temperature}" /></td>
@@ -113,7 +113,7 @@
 									<tr>
 										<td><c:out value="${patient.id}" /></td>
 										<td><a
-											href="/cbers/patientStatusLog?patient_id=${patient.id}"
+											href="/cbers/patientStatusLog?patient_id=${patient.id}&patient_name=${patient.name}"
 											title="View Patient Logs">${patient.name}</a></td>
 										<td><c:out value="${patient.age}" /></td>
 										<td><c:out value="${patient.temperature}" /></td>
@@ -150,7 +150,7 @@
 									<tr>
 										<td><c:out value="${patient.id}" /></td>
 										<td><a
-											href="/cbers/patientStatusLog?patient_id=${patient.id}"
+											href="/cbers/patientStatusLog?patient_id=${patient.id}&patient_name=${patient.name}"
 											title="View Patient Logs">${patient.name}</a></td>
 										<td><c:out value="${patient.age}" /></td>
 										<td><c:out value="${patient.temperature}" /></td>

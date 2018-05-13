@@ -11,7 +11,7 @@
 <link href="css/font-awesome.min.css" rel="stylesheet" />
 <script src="js/bootstrap.min.js"></script>
 <link rel="shortcut icon" href="favicon.ico" />
-<title>Advice Logs</title>
+<title>Incident History</title>
 </head>
 
 <body>
