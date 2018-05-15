@@ -11,11 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.cbers.models.PatientStatusModel;
 import com.cbers.models.UserModel;
 import com.cbers.models.enums.Role;
-import com.cbers.models.pojos.CbersResponse;
-import com.cbers.models.pojos.PatientLog;
 import com.cbers.models.pojos.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -33,7 +30,8 @@ public class LoginServlet extends HttpServlet {
 					throws ServletException, IOException {
 
 		resp.setContentType("text/html");
-
+		String userAgent = req.getHeader("User-Agent");
+		System.out.println("User Agent is: "+userAgent);
 		try {
 			String email = req.getParameter("email");
 			String password = req.getParameter("password");
@@ -74,22 +72,25 @@ public class LoginServlet extends HttpServlet {
 				encodedURL = resp.encodeRedirectURL("/cbers/patientStatus");
 				break;
 			case PATIENT:
-				PrintWriter out = resp.getWriter();
-				ObjectMapper objectMapper= new ObjectMapper();
-				PatientLog pl = PatientStatusModel.getLatestPatientStatus(email);
-				String jsonString = "";
-				if (pl != null) {
-					jsonString = objectMapper.writeValueAsString(pl);
+				if (!userAgent.toLowerCase().contains("android")){
+					session.invalidate();
+					req.setAttribute("error", "You are not authorized.");
+					String nextJSP = "/index.jsp";
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+					dispatcher.forward(req, resp);
+					return;
 				} else {
-					jsonString =  objectMapper.writeValueAsString(new CbersResponse("Failure", "No Data Found"));
+					PrintWriter out = resp.getWriter();
+					ObjectMapper objectMapper= new ObjectMapper();
+					String jsonString = "";
+					jsonString = objectMapper.writeValueAsString(user);
+					resp.setContentType("application/json");
+					resp.setCharacterEncoding("UTF-8");
+					out.print(jsonString);
+					out.flush();
+					resp.setStatus(200);
+					return;
 				}
-
-				resp.setContentType("application/json");
-				resp.setCharacterEncoding("UTF-8");
-				out.print(jsonString);
-				out.flush();
-				resp.setStatus(200);
-				return;
 			default:
 				req.setAttribute("error", "You are not authorized.");
 				req.setAttribute("email", email);

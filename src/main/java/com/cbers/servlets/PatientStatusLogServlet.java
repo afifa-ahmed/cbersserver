@@ -1,6 +1,7 @@
 package com.cbers.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -11,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.cbers.models.PatientStatusModel;
 import com.cbers.models.enums.Role;
+import com.cbers.models.pojos.CbersResponse;
 import com.cbers.models.pojos.PatientLog;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebServlet(
 		name = "PatientStatusLogServlet",
@@ -26,32 +29,70 @@ public class PatientStatusLogServlet extends CbersServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("Request > ["+req+"], Session > ["+req.getSession(false)+"]");
-		if (req.getSession(false) == null || req.getSession(false).getAttribute("userName") == null) {
-			System.out.println("User not logged in, redirect to login.");
-			goToLogin(req, resp);
-			return;
-		}
 
-		if (req.getSession(false).getAttribute("userRole") == null || 
-				!req.getSession(false).getAttribute("userRole").equals(Role.DOCTOR.toString())) {
-			System.out.println("User not a DOCTOR, redirect to login.");
-			unAuthorizedAccess(req, resp);
-			return;
-		}
+		String userAgent = req.getHeader("User-Agent");
+		System.out.println("User Agent is: "+userAgent);
 
-		long param = 0;
-		try {
-			param = Long.parseLong(req.getParameter("patient_id"));
-		} catch (NumberFormatException | NullPointerException e) {
-			e.printStackTrace();
-			resp.sendError(400, "Invalid Request");
-			return;
-		}
+		if (userAgent.toLowerCase().contains("android")) {
 
-		req.setAttribute("patient_name", req.getParameter("patient_name"));
-		req.setAttribute("patient_id", param);
-		List<PatientLog> patientStatusLogs = PatientStatusModel.getPatientStatusLogs(param);
-		loadPatientStatusLogs(req, resp, patientStatusLogs);
+			PrintWriter out = resp.getWriter();
+			ObjectMapper objectMapper= new ObjectMapper();
+			String jsonString = "";
+			String authString = req.getHeader("Authorization");
+			if (!isUserAuthenticated(authString)) {
+				jsonString =  objectMapper.writeValueAsString(new CbersResponse("Failure", "Unauthorized Access."));
+				resp.setStatus(401);
+				resp.setContentType("application/json");
+				resp.setCharacterEncoding("UTF-8");
+				out.print(jsonString);
+				out.flush();
+				return;
+			}
+
+			Long id = Long.parseLong(req.getParameter("patient_id"));
+
+			PatientLog pl = PatientStatusModel.getLatestPatientStatus(id);
+			if (pl != null) {
+				jsonString = objectMapper.writeValueAsString(pl);
+			} else {
+				jsonString =  objectMapper.writeValueAsString(new CbersResponse("Failure", "No Data Found"));
+			}
+
+			resp.setContentType("application/json");
+			resp.setCharacterEncoding("UTF-8");
+			out.print(jsonString);
+			out.flush();
+			resp.setStatus(200);
+			return;
+		} else {
+
+			if (req.getSession(false) == null || req.getSession(false).getAttribute("userName") == null) {
+				System.out.println("User not logged in, redirect to login.");
+				goToLogin(req, resp);
+				return;
+			}
+
+			if (req.getSession(false).getAttribute("userRole") == null || 
+					!req.getSession(false).getAttribute("userRole").equals(Role.DOCTOR.toString())) {
+				System.out.println("User not a DOCTOR, redirect to login.");
+				unAuthorizedAccess(req, resp);
+				return;
+			}
+
+			long param = 0;
+			try {
+				param = Long.parseLong(req.getParameter("patient_id"));
+			} catch (NumberFormatException | NullPointerException e) {
+				e.printStackTrace();
+				resp.sendError(400, "Invalid Request");
+				return;
+			}
+
+			req.setAttribute("patient_name", req.getParameter("patient_name"));
+			req.setAttribute("patient_id", param);
+			List<PatientLog> patientStatusLogs = PatientStatusModel.getPatientStatusLogs(param);
+			loadPatientStatusLogs(req, resp, patientStatusLogs);
+		}
 	}
 
 

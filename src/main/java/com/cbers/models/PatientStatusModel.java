@@ -120,4 +120,26 @@ public class PatientStatusModel {
 		return pStat;
 	}
 
+	public static PatientLog getLatestPatientStatus(long id) {
+		String query = "select * from `patient_logs` where `patient_id` = "+id+" order by id desc limit 1;";
+		List<Map<String, String>> result = DbUtils.getDBEntries(query);
+
+		System.out.println("\nReturning PatientStatus Result: "+result+"\n");
+
+		if (result.size() != 1) {
+			return null;
+		}
+
+		Map<String, String> patientStatus = result.get(0);
+
+		PatientLog pStat = new PatientLog(Integer.parseInt(patientStatus.get("patient_id")), Integer.parseInt(patientStatus.get("temperature")), 
+				Integer.parseInt(patientStatus.get("heart_rate")), patientStatus.get("blood_pressure"), 
+				Integer.parseInt(patientStatus.get("blood_sugar")), ColorCode.valueOf(patientStatus.get("state")),
+				Util.getDateFromDbString(patientStatus.get("created_at")));
+
+		System.out.println("\nReturning PatientStatus: "+pStat+"\n");
+
+		return pStat;
+	}
+
 }
