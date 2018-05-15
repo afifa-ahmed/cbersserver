@@ -56,8 +56,9 @@
 									</c:when>
 									<c:otherwise>
 										<c:set var="open_query" value="TRUE" scope="page" />
-										<a href="#" title="Answer Patient's Query"><span
-											class="fa fa-reply"> </span> Reply </a>
+										<a href="#" title="Answer Patient's Query"
+											onclick="openReplyQuery('${incident_id}','${incident.incident_log_id}');"
+											href=#><span class="fa fa-reply"> </span> Reply </a>
 									</c:otherwise>
 								</c:choose></td>
 							<td><c:out value="${incident.created_at}" /></td>
@@ -97,10 +98,12 @@
 						</a>
 					</c:when>
 					<c:otherwise>
-						<button class="btn btn-info  btn-md" title="Please reply the query first." disabled>
+						<button class="btn btn-info  btn-md"
+							title="Please reply the query first." disabled>
 							<span class="fa fa-pencil-square-o"></span> Update Advice
 						</button>
-						<button class="btn btn-success  btn-md" title="Please reply the query first." disabled>
+						<button class="btn btn-success  btn-md"
+							title="Please reply the query first." disabled>
 							<span class="fa fa-times"></span> Close Incident
 						</button>
 					</c:otherwise>
@@ -295,6 +298,97 @@
 						});
 			</script>
 		</div>
+
+
+		<!--QueryReply Message-->
+		<c:if test="${sessionScope.queryReplyError != null}">
+			<c:choose>
+				<c:when test="${fn:contains(queryReplyError, 'Error')}">
+					<div class="alert alert-danger">${queryReplyError}</div>
+				</c:when>
+				<c:otherwise>
+					<div class="alert alert-success">${queryReplyError}</div>
+				</c:otherwise>
+			</c:choose>
+			<c:remove var="queryReplyError" />
+		</c:if>
+
+		<!-- script QueryReply -->
+		<script>
+			function openReplyQuery(id, logId) {
+				console.log('Id: ' + id);
+				console.log('logId: ' + logId);
+				var inputs = $('<input type="hidden" name="incident_id" value="'+id+'">');
+				var inputs = $('<input type="hidden" name="incident_log_id" value="'+logId+'">');
+				$('#queryReplyForm').append(inputs);
+				jQuery('#modalQueryReply').modal('show');
+			}
+		</script>
+
+		<!-- Modal Close -->
+		<div class="modal fade" id="modalQueryReply" tabindex="-1"
+			role="dialog" aria-labelledby="queryReplyModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="queryReplyModalLabel">Reply to
+							query</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form action="/cbers/incident" method="post" role="form"
+							id="queryReplyForm" data-toggle="validator">
+							<input type="hidden" id="action" name="action" value="reply">
+							<div class="form-group row">
+								<label for="query_reply" class="col-sm-3 col-form-label">
+									Reply:</label>
+								<div class="col-sm-8">
+									<input type="text" name="query_reply" id="query_reply"
+										class="form-control" required />
+								</div>
+							</div>
+						</form>
+						<div class="text-right">
+							<div id="errorDivQueryReply" class="alert alert-danger"
+								role="alert" style="display: none;"></div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<a href="#" id="submitQueryReplyModal"
+							class="btn btn-success success">Submit</a>
+					</div>
+				</div>
+			</div>
+			<script type="text/javascript">
+				jQuery('#submitQueryReplyModal').on(
+						'click',
+						function(e) {
+							e.preventDefault();
+
+							console.log('Submit clicked, verifying modal');
+							var query_reply = jQuery('#query_reply').val();
+							if (!query_reply || '' == query_reply) {
+								console.log('query_reply: ' + query_reply);
+								jQuery('#errorDivQueryReply').text(
+										'Please enter your reply.');
+								jQuery('#errorDivQueryReply').css("display",
+										"inline");
+								return false;
+							}
+
+							jQuery('#errorDivQueryReply')
+									.css("display", "none");
+							/* when the submit button in the modal is clicked, submit the form */
+							jQuery('#queryReplyForm').submit();
+						});
+			</script>
+		</div>
+
 
 	</div>
 </body>

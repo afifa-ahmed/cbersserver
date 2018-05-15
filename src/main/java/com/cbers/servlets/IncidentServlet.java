@@ -99,7 +99,8 @@ public class IncidentServlet extends CbersServlet {
 			unAuthorizedAccess(req, resp);
 			return;
 		}
-
+		
+		// TODO QEURY, REPLY, JAVASCRIP AND MODAL
 		String action = req.getParameter("action");
 		if (!"create".equalsIgnoreCase(action) && !"update".equalsIgnoreCase(action) && !"close".equalsIgnoreCase(action)) {
 			resp.setStatus(400);
