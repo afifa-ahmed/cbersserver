@@ -9,7 +9,8 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
 <script src="js/popper.min.js"></script>
 <link rel="stylesheet" href="css/bootstrap.min.css" />
-<link href="css/font-awesome.min.css" rel="stylesheet" />
+<!-- <link href="css/font-awesome.min.css" rel="stylesheet" /> -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 <script src="js/bootstrap.min.js"></script>
 <link rel="shortcut icon" href="favicon.ico" />
 <title>Patients Status</title>
@@ -77,7 +78,8 @@
 										<td><c:out value="${patient.id}" /></td>
 										<td><a
 											href="/cbers/patientStatusLog?patient_id=${patient.id}&patient_name=${patient.name}"
-											title="View Patient Logs">${patient.name}</a></td>
+											title="View Patient Logs">${patient.name} <span
+												class="fa fa-heartbeat"> </span></a></td>
 										<td><c:out value="${patient.age}" /></td>
 										<td><c:out value="${patient.temperature}" /></td>
 										<td><c:out value="${patient.heartRate}" /></td>
@@ -87,13 +89,13 @@
 										<td><c:choose>
 												<c:when test="${empty patient.state}">
 													<a onclick="openCreateIncident('${patient.id}');" href=#>
-														<span class="fa fa-plus"></span> Create
+														<span class="fa fa-notes-medical"></span> Add
 													</a>
 												</c:when>
 												<c:otherwise>
 													<a href="/cbers/incidentLog?patient_id=${patient.id}"
-														title="View Incident History"> <span
-														class="fa fa-pencil-square-o"> </span>
+														title="View Incident History">View <span
+														class="fa fa-eye"> </span>
 													</a>
 												</c:otherwise>
 											</c:choose></td>
@@ -114,7 +116,8 @@
 										<td><c:out value="${patient.id}" /></td>
 										<td><a
 											href="/cbers/patientStatusLog?patient_id=${patient.id}&patient_name=${patient.name}"
-											title="View Patient Logs">${patient.name}</a></td>
+											title="View Patient Logs">${patient.name} <span
+												class="fa fa-heartbeat"> </span></a></td>
 										<td><c:out value="${patient.age}" /></td>
 										<td><c:out value="${patient.temperature}" /></td>
 										<td><c:out value="${patient.heartRate}" /></td>
@@ -124,13 +127,13 @@
 										<td><c:choose>
 												<c:when test="${empty patient.state}">
 													<a onclick="openCreateIncident('${patient.id}');" href=#>
-														<span class="fa fa-plus"></span> Create
+														<span class="fa fa-notes-medical"></span> Add
 													</a>
 												</c:when>
 												<c:otherwise>
 													<a href="/cbers/incidentLog?patient_id=${patient.id}"
-														title="View Incident History"> <span
-														class="fa fa-pencil-square-o"> </span>
+														title="View Incident History">View <span
+														class="fa fa-eye"> </span>
 													</a>
 												</c:otherwise>
 											</c:choose></td>
@@ -151,7 +154,8 @@
 										<td><c:out value="${patient.id}" /></td>
 										<td><a
 											href="/cbers/patientStatusLog?patient_id=${patient.id}&patient_name=${patient.name}"
-											title="View Patient Logs">${patient.name}</a></td>
+											title="View Patient Logs">${patient.name} <span
+												class="fa fa-heartbeat"> </span></a></td>
 										<td><c:out value="${patient.age}" /></td>
 										<td><c:out value="${patient.temperature}" /></td>
 										<td><c:out value="${patient.heartRate}" /></td>
@@ -161,13 +165,13 @@
 										<td><c:choose>
 												<c:when test="${empty patient.state}">
 													<a onclick="openCreateIncident('${patient.id}');" href=#>
-														<span class="fa fa-plus"></span> Create
+														<span class="fa fa-notes-medical"></span> Add
 													</a>
 												</c:when>
 												<c:otherwise>
 													<a href="/cbers/incidentLog?patient_id=${patient.id}"
-														title="View Incident History"> <span
-														class="fa fa-pencil-square-o"> </span>
+														title="View Incident History">View <span
+														class="fa fa-eye"> </span>
 													</a>
 												</c:otherwise>
 											</c:choose></td>
