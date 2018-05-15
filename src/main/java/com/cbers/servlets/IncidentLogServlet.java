@@ -50,7 +50,9 @@ public class IncidentLogServlet extends CbersServlet {
 		} else if (patient_id != null) {
 			try {
 				param = Long.parseLong(req.getParameter("patient_id"));
-				patientIncidents = IncidentModel.getAllOpenIncidents(param);
+				patientIncidents = IncidentModel.getOpenIncidentLogs(param);
+				if (patientIncidents.size() > 0)
+					incident_id = String.valueOf(patientIncidents.get(0).getIncident_id());
 			} catch (NumberFormatException | NullPointerException e) {
 				e.printStackTrace();
 				resp.sendError(400, "Invalid Request");
@@ -67,6 +69,7 @@ public class IncidentLogServlet extends CbersServlet {
 			}
 		}
 
+		req.setAttribute("incident_id", incident_id);
 		loadIncidentLogs(req, resp, patientIncidents);
 	}
 

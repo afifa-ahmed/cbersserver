@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.cbers.db.DbUtils;
+import com.cbers.models.enums.Role;
 import com.cbers.models.enums.State;
 import com.cbers.models.pojos.Incident;
 import com.cbers.models.pojos.IncidentLog;
@@ -119,15 +120,16 @@ public class IncidentModel {
 		return rows == 1;
 	}
 
-	public static List<IncidentLog> getAllOpenIncidents(long patient_id) {
+	public static List<IncidentLog> getOpenIncidentLogs(long patient_id) {
 		String query = "select il.* from incident_logs il join incidents i on (il.incident_id = i.id) "
 				+ "where i.patient_id = "+patient_id+" and state='OPEN' order by id desc;";
 		List<Map<String, String>> result = DbUtils.getDBEntries(query);
 		List<IncidentLog> incidentLogs = new ArrayList<>();
 		int i = 1;
 		for (Map<String, String> incident : result) {
-			incidentLogs.add(new IncidentLog(i++, Long.parseLong(incident.get("incident_id")), incident.get("incident_detail"), 
-					incident.get("solution"), Util.getDateFromDbString(incident.get("created_at"))));
+			incidentLogs.add(new IncidentLog(i++, Long.parseLong(incident.get("id")), Long.parseLong(incident.get("incident_id")), 
+					incident.get("incident_detail"), incident.get("solution"), Role.valueOf(incident.get("created_by")), 
+					Util.getDateFromDbString(incident.get("created_at"))));
 		}
 		return incidentLogs;
 	}
@@ -138,8 +140,9 @@ public class IncidentModel {
 		List<IncidentLog> incidentLogs = new ArrayList<>();
 		int i = 1;
 		for (Map<String, String> incident : result) {
-			incidentLogs.add(new IncidentLog(i++, Long.parseLong(incident.get("incident_id")), incident.get("incident_detail"), 
-					incident.get("solution"), Util.getDateFromDbString(incident.get("created_at"))));
+			incidentLogs.add(new IncidentLog(i++, Long.parseLong(incident.get("id")), Long.parseLong(incident.get("incident_id")), 
+					incident.get("incident_detail"), incident.get("solution"), Role.valueOf(incident.get("created_by")), 
+					Util.getDateFromDbString(incident.get("created_at"))));
 		}
 		return incidentLogs;
 	}

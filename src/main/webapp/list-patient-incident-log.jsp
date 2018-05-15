@@ -41,7 +41,7 @@
 					<thead>
 						<tr>
 							<th>#</th>
-							<th>Incident Detail</th>
+							<th>Incident/Query</th>
 							<th>Advice given</th>
 							<th>Date</th>
 						</tr>
@@ -50,10 +50,17 @@
 						<tr>
 							<td><c:out value="${incident.id}" /></td>
 							<td><c:out value="${incident.incident_detail}" /></td>
-							<td><c:out value="${incident.solution}" /></td>
+							<td><c:choose>
+									<c:when test="${not empty incident.solution}">
+										<c:out value="${incident.solution}" />
+									</c:when>
+									<c:otherwise>
+										<c:set var="open_query" value="TRUE" scope="page" />
+										<a href="#" title="Answer Patient's Query"><span
+											class="fa fa-reply"> </span> Reply </a>
+									</c:otherwise>
+								</c:choose></td>
 							<td><c:out value="${incident.created_at}" /></td>
-							<c:set var="incident_id" value="${incident.incident_id}"
-								scope="page" />
 						</tr>
 					</c:forEach>
 				</table>
@@ -73,18 +80,31 @@
 			</div>
 			<div class="col">
 				<a class="btn btn-primary  btn-md"
-					href="/cbers/incident?incident_id=${pageScope.incident_id}"> <span
+					href="/cbers/incident?incident_id=${incident_id}"> <span
 					class="fa fa-eye"></span> View Patient History
 				</a>
 			</div>
 			<div class="col text-right">
-				<a class="btn btn-info  btn-md"
-					onclick="openUpdateIncident('${pageScope.incident_id}');" href=#>
-					<span class="fa fa-pencil-square-o"></span> Update Advice
-				</a> <a class="btn btn-success  btn-md"
-					onclick="openCloseIncident('${pageScope.incident_id}');" href=#>
-					<span class="fa fa-times"></span> Close Incident
-				</a>
+				<c:choose>
+					<c:when test="${empty pageScope.open_query}">
+						<a class="btn btn-info  btn-md"
+							onclick="openUpdateIncident('${incident_id}');" href=#> <span
+							class="fa fa-pencil-square-o"></span> Update Advice
+						</a>
+						<a class="btn btn-success  btn-md"
+							onclick="openCloseIncident('${incident_id}');" href=#> <span
+							class="fa fa-times"></span> Close Incident
+						</a>
+					</c:when>
+					<c:otherwise>
+						<button class="btn btn-info  btn-md" title="Please reply the query first." disabled>
+							<span class="fa fa-pencil-square-o"></span> Update Advice
+						</button>
+						<button class="btn btn-success  btn-md" title="Please reply the query first." disabled>
+							<span class="fa fa-times"></span> Close Incident
+						</button>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 		<br>
@@ -257,9 +277,11 @@
 							e.preventDefault();
 
 							console.log('Submit clicked, verifying modal');
-							var closing_comment = jQuery('#closing_comment').val();
+							var closing_comment = jQuery('#closing_comment')
+									.val();
 							if (!closing_comment || '' == closing_comment) {
-								console.log('closing_comment: ' + closing_comment);
+								console.log('closing_comment: '
+										+ closing_comment);
 								jQuery('#errorDivClose').text(
 										'Please enter closing comments.');
 								jQuery('#errorDivClose').css("display",
