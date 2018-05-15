@@ -318,8 +318,7 @@
 			function openReplyQuery(id, logId) {
 				console.log('Id: ' + id);
 				console.log('logId: ' + logId);
-				var inputs = $('<input type="hidden" name="incident_id" value="'+id+'">');
-				var inputs = $('<input type="hidden" name="incident_log_id" value="'+logId+'">');
+				var inputs = $('<input type="hidden" name="incident_id" value="'+id+'"><input type="hidden" name="incident_log_id" value="'+logId+'">');
 				$('#queryReplyForm').append(inputs);
 				jQuery('#modalQueryReply').modal('show');
 			}

@@ -78,6 +78,35 @@ public class IncidentModel {
 			return null;
 	}
 
+	public static List<IncidentLog> getLogsForTheOpenIncident(long patient_id) {
+		String query = "select il.* from incident_logs il join incidents i on (il.incident_id = i.id) "
+				+ "where i.patient_id = "+patient_id+" and state='OPEN' order by id desc;";
+		List<Map<String, String>> result = DbUtils.getDBEntries(query);
+		List<IncidentLog> incidentLogs = new ArrayList<>();
+		int i = 1;
+		for (Map<String, String> incident : result) {
+			incidentLogs.add(new IncidentLog(i++, Long.parseLong(incident.get("id")), Long.parseLong(incident.get("incident_id")), 
+					incident.get("incident_detail"), incident.get("solution"), Role.valueOf(incident.get("created_by")), 
+					Util.getDateFromDbString(incident.get("created_at"))));
+		}
+		return incidentLogs;
+	}
+
+	public static List<IncidentLog> getAllIncidents(long incident_id) {
+		String query = "select * from incident_logs where incident_id = "+incident_id+" order by id desc;";
+		List<Map<String, String>> result = DbUtils.getDBEntries(query);
+		List<IncidentLog> incidentLogs = new ArrayList<>();
+		int i = 1;
+		for (Map<String, String> incident : result) {
+			incidentLogs.add(new IncidentLog(i++, Long.parseLong(incident.get("id")), Long.parseLong(incident.get("incident_id")), 
+					incident.get("incident_detail"), incident.get("solution"), Role.valueOf(incident.get("created_by")), 
+					Util.getDateFromDbString(incident.get("created_at"))));
+		}
+		return incidentLogs;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	public static long addIncident(Incident incident) throws SQLException {
 		String query = "select id from  `incidents`  where `patient_id` = "+incident.getPatient_id()+" and state = 'OPEN';";
 		List<Map<String, String>> result = DbUtils.getDBEntries(query);
@@ -108,8 +137,8 @@ public class IncidentModel {
 
 		query = "INSERT INTO `incident_logs` (`incident_id`, `incident_detail`, `solution`) VALUES ("+incident_id+", "
 				+ "'"+incident_detail+"', '"+solution+"');";
-		DbUtils.runUpdate(query);
-		return rows == 1;
+		rows += DbUtils.runUpdate(query);
+		return rows == 2;
 	}
 
 	public static boolean closeIncident(long incident_id, String closing_comment) throws SQLException {
@@ -120,31 +149,52 @@ public class IncidentModel {
 		return rows == 1;
 	}
 
-	public static List<IncidentLog> getOpenIncidentLogs(long patient_id) {
-		String query = "select il.* from incident_logs il join incidents i on (il.incident_id = i.id) "
-				+ "where i.patient_id = "+patient_id+" and state='OPEN' order by id desc;";
-		List<Map<String, String>> result = DbUtils.getDBEntries(query);
-		List<IncidentLog> incidentLogs = new ArrayList<>();
-		int i = 1;
-		for (Map<String, String> incident : result) {
-			incidentLogs.add(new IncidentLog(i++, Long.parseLong(incident.get("id")), Long.parseLong(incident.get("incident_id")), 
-					incident.get("incident_detail"), incident.get("solution"), Role.valueOf(incident.get("created_by")), 
-					Util.getDateFromDbString(incident.get("created_at"))));
-		}
-		return incidentLogs;
+	public static int updateReply(long incident_id, long incident_log_id, String query_reply) throws SQLException {
+		String query = "UPDATE `incidents` SET `solution` = '"+query_reply+"' WHERE `id` = "+incident_id+";";
+		int rows = DbUtils.runUpdate(query);
+
+		query = "UPDATE `incident_logs` SET `solution` = '"+query_reply+"' WHERE `id` = "+incident_log_id+";";
+		rows += DbUtils.runUpdate(query);
+		return rows;
 	}
 
-	public static List<IncidentLog> getAllIncidents(long incident_id) {
-		String query = "select * from incident_logs where incident_id = "+incident_id+" order by id desc;";
+	public static int insertQuery(long patient_id, String patientQuery) throws SQLException {
+		String query = "select * FROM `incidents` where `patient_id` = "+patient_id+" and `state` = 'OPEN';";
 		List<Map<String, String>> result = DbUtils.getDBEntries(query);
-		List<IncidentLog> incidentLogs = new ArrayList<>();
-		int i = 1;
-		for (Map<String, String> incident : result) {
-			incidentLogs.add(new IncidentLog(i++, Long.parseLong(incident.get("id")), Long.parseLong(incident.get("incident_id")), 
-					incident.get("incident_detail"), incident.get("solution"), Role.valueOf(incident.get("created_by")), 
-					Util.getDateFromDbString(incident.get("created_at"))));
+		int rows = -1;
+		if (result.size() == 0) {
+			// Same as add incident 
+			query = "INSERT INTO `incidents` (`patient_id`, `incident_detail`) VALUES ("+patient_id+", '"+patientQuery+"');";
+			rows = DbUtils.runUpdate(query);
+
+			if (rows == 1 ) {
+				Incident insertedIncident = getLatestIncident(patient_id);
+				query = "INSERT INTO `incident_logs` (`incident_id`, `incident_detail`, `created_by`) VALUES ("+insertedIncident.getId()+", "
+						+ "'"+insertedIncident.getIncident_detail()+"', 'PATIENT');";
+				DbUtils.runUpdate(query);
+				rows += insertedIncident.getId();
+			}
+		} else if (result.size() == 1){
+			Map<String, String> map = result.get(0);
+			if (map.get("solution") == null) {
+				return -2;
+			} else {
+				// Same as update incident
+				query = "UPDATE `incidents` SET `incident_detail` = '"+patientQuery+"',"
+						+ " `solution` = NULL WHERE `id` = "+map.get("id")+";";
+				rows = DbUtils.runUpdate(query);
+
+				query = "INSERT INTO `incident_logs` (`incident_id`, `incident_detail`, `created_by`) VALUES ("+map.get("id")+", "
+						+ "'"+patientQuery+"', 'PATIENT');";
+				rows += DbUtils.runUpdate(query);
+			}
+		} else {
+			return -3;
 		}
-		return incidentLogs;
+		return rows;
 	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 }

@@ -50,7 +50,7 @@ public class IncidentLogServlet extends CbersServlet {
 		} else if (patient_id != null) {
 			try {
 				param = Long.parseLong(req.getParameter("patient_id"));
-				patientIncidents = IncidentModel.getOpenIncidentLogs(param);
+				patientIncidents = IncidentModel.getLogsForTheOpenIncident(param);
 				if (patientIncidents.size() > 0)
 					incident_id = String.valueOf(patientIncidents.get(0).getIncident_id());
 			} catch (NumberFormatException | NullPointerException e) {
