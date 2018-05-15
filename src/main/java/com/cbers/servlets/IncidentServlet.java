@@ -149,6 +149,7 @@ public class IncidentServlet extends CbersServlet {
 				break;
 			}
 
+			System.out.println("Sending Response: " +jsonString);
 			resp.setContentType("application/json");
 			resp.setCharacterEncoding("UTF-8");
 			out.print(jsonString);
@@ -183,6 +184,7 @@ public class IncidentServlet extends CbersServlet {
 				break;    
 			case "close":
 				closeIncident(req, resp);
+				break;
 			case "reply":
 				replyQuery(req, resp);
 				break;    

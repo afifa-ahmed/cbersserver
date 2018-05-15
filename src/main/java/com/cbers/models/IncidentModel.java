@@ -171,8 +171,7 @@ public class IncidentModel {
 				Incident insertedIncident = getLatestIncident(patient_id);
 				query = "INSERT INTO `incident_logs` (`incident_id`, `incident_detail`, `created_by`) VALUES ("+insertedIncident.getId()+", "
 						+ "'"+insertedIncident.getIncident_detail()+"', 'PATIENT');";
-				DbUtils.runUpdate(query);
-				rows += insertedIncident.getId();
+				rows += DbUtils.runUpdate(query);
 			}
 		} else if (result.size() == 1){
 			Map<String, String> map = result.get(0);
