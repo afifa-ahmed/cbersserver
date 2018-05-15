@@ -9,6 +9,8 @@ import java.util.Map;
 import com.cbers.db.DbUtils;
 import com.cbers.models.enums.ColorCode;
 import com.cbers.models.enums.State;
+import com.cbers.models.pojos.AndroidPatientLog;
+import com.cbers.models.pojos.Incident;
 import com.cbers.models.pojos.PatientLog;
 import com.cbers.models.pojos.PatientStatus;
 import com.cbers.utils.Util;
@@ -139,7 +141,11 @@ public class PatientStatusModel {
 
 		System.out.println("\nReturning PatientStatus: "+pStat+"\n");
 
-		return pStat;
+		Incident latestIncident = IncidentModel.getLatestIncident(id);
+		if (latestIncident != null)
+			return new AndroidPatientLog(pStat, latestIncident.getIncident_detail(), latestIncident.getSolution());
+		else 
+			return pStat;
 	}
 
 }

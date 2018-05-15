@@ -54,15 +54,16 @@ public class PatientStatusLogServlet extends CbersServlet {
 			PatientLog pl = PatientStatusModel.getLatestPatientStatus(id);
 			if (pl != null) {
 				jsonString = objectMapper.writeValueAsString(pl);
+				resp.setStatus(200);
 			} else {
 				jsonString =  objectMapper.writeValueAsString(new CbersResponse("Failure", "No Data Found"));
+				resp.setStatus(500);
 			}
-
+			System.out.println("Sending Response: "+jsonString);
 			resp.setContentType("application/json");
 			resp.setCharacterEncoding("UTF-8");
 			out.print(jsonString);
 			out.flush();
-			resp.setStatus(200);
 			return;
 		} else {
 
