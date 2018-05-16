@@ -99,9 +99,9 @@ public class PatientStatusServlet extends CbersServlet {
 		int bpLow = Integer.parseInt(bp[0]);
 		int bpHigh = Integer.parseInt(bp[1]);
 
-		if (temperature > 102 || heartRate > 120 || bloodSugar > 350 || bpLow < 60 || bpHigh > 200) {
+		if (temperature > 102 || heartRate > 140 || bloodSugar > 350 || bpLow < 60 || bpHigh > 200) {
 			code = ColorCode.RED;
-		} else if (temperature > 100 || heartRate > 90 || bloodSugar > 200 || bpLow < 80 || bpHigh > 150) {
+		} else if (temperature > 100 || heartRate > 100 || bloodSugar > 200 || bpLow < 80 || bpHigh > 150) {
 			code = ColorCode.ORANGE;
 		} else {
 			code = ColorCode.GREEN;
