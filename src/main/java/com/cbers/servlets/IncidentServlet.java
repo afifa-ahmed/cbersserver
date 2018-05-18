@@ -202,7 +202,7 @@ public class IncidentServlet extends CbersServlet {
 
 		int success = 0;
 		try {
-			success = IncidentModel.updateReply(incident_id, incident_log_id, query_reply);
+			success = IncidentModel.updateReply(incident_id, incident_log_id, query_reply.replaceAll("'", ""));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -231,7 +231,7 @@ public class IncidentServlet extends CbersServlet {
 		String incident_detail = req.getParameter("incident");
 		String solution = req.getParameter("solution");
 
-		Incident incident = new Incident(patient_id, incident_detail, solution);
+		Incident incident = new Incident(patient_id, incident_detail.replaceAll("'", ""), solution.replaceAll("'", ""));
 		long incidentId = 0;
 		try {
 			incidentId = IncidentModel.addIncident(incident);
@@ -267,7 +267,7 @@ public class IncidentServlet extends CbersServlet {
 
 		boolean success = false;
 		try {
-			success = IncidentModel.updateIncident(incident_id, incident_detail, solution);
+			success = IncidentModel.updateIncident(incident_id, incident_detail.replaceAll("'", ""), solution.replaceAll("'", ""));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -296,7 +296,7 @@ public class IncidentServlet extends CbersServlet {
 
 		boolean success = false;
 		try {
-			success = IncidentModel.closeIncident(incident_id, closing_comment);
+			success = IncidentModel.closeIncident(incident_id, closing_comment.replaceAll("'", ""));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
