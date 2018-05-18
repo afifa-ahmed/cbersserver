@@ -104,6 +104,7 @@ border-right:1px solid #fff;
 color:#fff;
 font-size:50px;
   line-height: 125px;
+  padding: 5px;
 }
 
 #login form span.fa {
@@ -146,7 +147,7 @@ fieldset{
   font-weight: bold;
   /* margin-bottom: 2em; */
   text-transform: uppercase;
-  padding: 5px 10px;
+  padding: 3px 10px;
   height: 30px;
 }
 
