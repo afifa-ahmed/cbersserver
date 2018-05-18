@@ -5,18 +5,22 @@
 
 <html>
 <head>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<link
+<!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
+<script src="js/jquery-3.3.1.min.js"></script>
+<!-- <link
 	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
-	rel="stylesheet" id="bootstrap-css">
-<script
-	src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	rel="stylesheet" id="bootstrap-css"> -->
+<!-- <script
+	src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script> -->
 <!------ Include the above in your HEAD tag ---------->
 <!-- <link rel="stylesheet"
 	href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"> -->
 <link rel="stylesheet" href="css/fontawesome-all.min.css">
 <link rel="stylesheet" href="css/login.css">
 <link rel="shortcut icon" href="favicon.ico" />
+<script src="js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+
 <title>Login</title>
 </head>
 
