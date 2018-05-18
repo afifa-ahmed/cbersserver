@@ -8,17 +8,23 @@
 <link rel="shortcut icon" href="favicon.ico" />
 <!-- <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 
-<script type="text/javascript"
-	src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript"
-	src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<!-- <script type="text/javascript"
+	src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script> -->
+	<script type="text/javascript"
+	src="js/moment.min.js"></script>
+<!-- <script type="text/javascript"
+	src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script> -->
+	<script type="text/javascript"
+	src="js/daterangepicker.js"></script>
 <link rel="stylesheet"
 	href="css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css"
-	href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<!-- <link rel="stylesheet" type="text/css"
+	href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" /> -->
+	<link rel="stylesheet" type="text/css"
+	href="css/daterangepicker.css" />
 
 <link rel="shortcut icon" href="favicon.ico" />
 <title>Add/Edit User</title>
