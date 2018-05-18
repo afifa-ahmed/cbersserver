@@ -62,9 +62,9 @@ public class FireBaseMessage {
 		return false;
 	}
 
-	public static void main(String args[]) {
-		send("eK27URIVGI4:APA91bEKKnvDdD3VsQr4B-7GXZTRObswbtBd6I2l3nDVXspHblzy1J_RFf67b8mlSbRMCMrLo3WjwK19hqYZUsfN26MbbKQJdsVQTyPtLYWhmU_UbU5Fz_EzfkPsQovB_Ijoeyzd8y33", 
-				"CBERS Doctor has sent you an update.");
-	}
+	//	public static void main(String args[]) {
+	//		send("eK27URIVGI4:APA91bEKKnvDdD3VsQr4B-7GXZTRObswbtBd6I2l3nDVXspHblzy1J_RFf67b8mlSbRMCMrLo3WjwK19hqYZUsfN26MbbKQJdsVQTyPtLYWhmU_UbU5Fz_EzfkPsQovB_Ijoeyzd8y33", 
+	//				"CBERS Doctor has sent you an update.");
+	//	}
 
 }
