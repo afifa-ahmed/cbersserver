@@ -9,12 +9,12 @@ import java.net.URL;
 
 public class FireBaseMessage {
 
-	public static final boolean SEND_MESSAGE = false;
+	public static final boolean SEND_MESSAGE = true;
 
 	public static boolean send(String to, String message) {
 
-		String payload = "{\r\n   \"content_available\": true,\r\n   \"priority\": \"high\",\r\n   \"to\": \""+to+"\",\r\n   "
-				+ "\"notification\": {\r\n       \"title\": \"CBERS UPDATE\",\r\n       \"body\": \""+message+"\"\r\n   }\r\n}";
+		String payload = "{\r\n   \"priority\": \"high\",\r\n   \"to\": \""+to+"\",\r\n   "
+				+ "\"notification\": {\r\n       \"title\": \"Urgent\",\r\n       \"body\": \""+message+"\"\r\n   }\r\n}";
 
 		System.out.println("Payload: "+ payload);
 		return sendPOST("https://fcm.googleapis.com/fcm/send", payload);
