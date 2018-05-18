@@ -12,10 +12,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.cbers.models.FireBaseModel;
 import com.cbers.models.IncidentModel;
 import com.cbers.models.enums.Role;
 import com.cbers.models.pojos.CbersResponse;
 import com.cbers.models.pojos.Incident;
+import com.cbers.utils.FireBaseMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebServlet(
@@ -213,7 +215,13 @@ public class IncidentServlet extends CbersServlet {
 		req.getSession().setAttribute("queryReplyError", message);
 		resp.sendRedirect(resp.encodeRedirectURL("/cbers/incidentLog?incident_id="+incident_id));
 
-		// TODO HOW TO UPDATE ANDROID APP
+		if (FireBaseMessage.SEND_MESSAGE)
+			try {
+				FireBaseMessage.send(FireBaseModel.getTokenFromIncident(incident_id), "Doctor replied to your query.");
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("FCM Push Failed in replyQuery.");
+			}
 	}
 
 
@@ -242,7 +250,13 @@ public class IncidentServlet extends CbersServlet {
 		req.getSession().setAttribute("incidentCreateError", message);
 		resp.sendRedirect(resp.encodeRedirectURL("/cbers/patientStatus"));
 
-		// TODO HOW TO UPDATE ANDROID APP
+		if (FireBaseMessage.SEND_MESSAGE)
+			try {
+				FireBaseMessage.send(FireBaseModel.getTokenFromIncident(patient_id), "Doctor logged an incident.");
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("FCM Push Failed in createIncident.");
+			}
 	}
 
 	private void updateIncident(HttpServletRequest req, HttpServletResponse resp)
@@ -266,7 +280,13 @@ public class IncidentServlet extends CbersServlet {
 		req.getSession().setAttribute("incidentUpdateError", message);
 		resp.sendRedirect(resp.encodeRedirectURL("/cbers/incidentLog?incident_id="+incident_id));
 
-		// TODO HOW TO UPDATE ANDROID APP
+		if (FireBaseMessage.SEND_MESSAGE)
+			try {
+				FireBaseMessage.send(FireBaseModel.getTokenFromIncident(incident_id), "Doctor updated an incident.");
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("FCM Push Failed in updateIncident.");
+			}
 	}
 
 	private void closeIncident(HttpServletRequest req, HttpServletResponse resp)
@@ -288,7 +308,14 @@ public class IncidentServlet extends CbersServlet {
 		}
 		req.getSession().setAttribute("incidentCloseError", message);
 		resp.sendRedirect(resp.encodeRedirectURL("/cbers/incidentLog?incident_id="+incident_id));
-		// TODO HOW TO UPDATE ANDROID APP
+
+		if (FireBaseMessage.SEND_MESSAGE)
+			try {
+				FireBaseMessage.send(FireBaseModel.getTokenFromIncident(incident_id), "Doctor closed your incident.");
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("FCM Push Failed in closeIncident.");
+			}
 	}
 
 }
