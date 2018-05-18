@@ -128,7 +128,7 @@ public class IncidentServlet extends CbersServlet {
 
 			int result = -4;
 			try {
-				result = IncidentModel.insertQuery(id, patient_query);
+				result = IncidentModel.insertQuery(id, patient_query.replaceAll("'", ""));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
