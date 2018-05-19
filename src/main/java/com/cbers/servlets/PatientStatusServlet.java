@@ -85,7 +85,7 @@ public class PatientStatusServlet extends CbersServlet {
 		int bloodSugar = Integer.parseInt(Util.decrypt(req.getParameter("blood_sugar")));
 
 		User user = UserModel.getUser(email);
-		if (!Role.PATIENT.equals(user.getRole())) {
+		if (user == null || !Role.PATIENT.equals(user.getRole())) {
 			resp.sendError(401, "Unauthorized Role Access");
 			return;
 		}

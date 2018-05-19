@@ -21,7 +21,7 @@ public class PatientStatusModel {
 		String query = "select u.`id` id, u.`name` name, u.`phone` phone, u.`dob` dob, ps.`temperature` temperature, "
 				+ "ps.`heart_rate` heart_rate, ps.`blood_pressure` blood_pressure, ps.`blood_sugar` blood_sugar, ps.`state` status, "
 				+ "ps.`updated_at` created_at, ph.`state` incident_state from `users` u join `patient_status` ps on (u.id = ps.`patient_id`) "
-				+ "left join `incidents` ph on (ps.`patient_id` = ph.`patient_id` AND ph.`state` = 'OPEN');";
+				+ "left join `incidents` ph on (ps.`patient_id` = ph.`patient_id` AND ph.`state` = 'OPEN') order by ps.`updated_at` desc;";
 
 		List<Map<String, String>> result = DbUtils.getDBEntries(query);
 		Map<String, List<PatientStatus>> patients = new HashMap<>();
