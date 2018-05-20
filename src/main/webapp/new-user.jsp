@@ -2,6 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
 <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -171,7 +172,7 @@
 						<div class="col-sm-10">
 							<div class="input-group" id="dateDiv">
 								<input type="text" class="form-control" id="dob" name="dob"
-									value="" placeholder="Select the DOB">
+									value="<fmt:formatDate value="${user.dob}" pattern="yyyy-MM-dd HH:mm:ss" />" placeholder="Select the DOB">
 								<div class="input-group-append">
 									<button class="btn btn-outline-secondary" disabled>
 										<span class="fa fa-calendar"></span>
